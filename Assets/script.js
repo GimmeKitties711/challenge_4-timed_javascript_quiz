@@ -28,7 +28,7 @@ var questions = [
     },
     {
         id: 3,
-        question: "Which of the following choices demonstrates the correct syntax of a for loop?",
+        question: "Which of the following choices demonstrates the correct way to write a for loop?",
         a: "for (i=0; i<array.length; i++)",
         b: "for (i=0, i<array.length, i++)",
         c: "for (i=0; i=array.length; i++)",
