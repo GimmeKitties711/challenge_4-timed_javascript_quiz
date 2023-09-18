@@ -3,8 +3,8 @@ var questions = [
         id: 0,
         question: "What is the result of 'C R A B'.split(' ')?",
         a: "crab",
-        b: "['C', 'R', 'A', 'B']",
-        c: "CRAB",
+        b: "CRAB",
+        c: "['C', 'R', 'A', 'B']",
         d: "['c', 'r', 'a', 'b']",
         correct: "c"
     },
