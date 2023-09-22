@@ -1,5 +1,19 @@
+:root {
+    --window-width: 600px;
+}
+
+body {
+    margin: 50px 0 0 50px; /* top right bottom left */
+}
+
 .header {
-    max-width: 600px;
+    max-width: var(--window-width);
+}
+
+@media only screen and (max-width: 360px) {
+    .header {
+        height: 150px;
+    }
 }
 
 .header h4 {
@@ -22,17 +36,37 @@
     padding-left: 36px;
 }
 
-#content-container {
+#home-container {
+    max-width: var(--window-width);
+}
+
+#home-container h2 {
+    display: flex;
+    justify-content: center;
+}
+
+#quiz-instructions {
+    padding-left: 20px;
+}
+
+#start-quiz-btn {
+    display: block;
+    margin: 0 auto; /* 0 is top and bottom, auto is right and left */
+}
+/* source for how to center a button in a div: https://stackoverflow.com/questions/15300234/how-can-i-horizontally-center-a-button-element-in-a-div-element */
+
+#start-quiz-btn p {
+    margin: 2px;
+}
+
+#quiz-container {
     max-width: 600px;
     max-height: 800px;
+    display: none;
 }
 
 #current-question {
     margin: 0 0 20px 20px;
-}
-
-button {
-    margin: 0 20px 0 20px;
 }
 
 button:hover {

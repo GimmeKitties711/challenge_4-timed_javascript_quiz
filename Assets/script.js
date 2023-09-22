@@ -90,3 +90,16 @@ var questions = [
         correct: "d"
     }
 ];
+
+var startQuizBtn = document.getElementById('start-quiz-btn');
+var homeContainer = document.getElementById('home-container');
+var quizContainer = document.getElementById('quiz-container');
+
+function pageHomeToQuiz() {
+    homeContainer.style.display = "none";
+    quizContainer.style.display = "block";
+}
+
+startQuizBtn.addEventListener("click", pageHomeToQuiz);
+
+// source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
