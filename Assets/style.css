@@ -19,11 +19,12 @@ body {
 .header h4 {
     display: inline-block;
     padding-left: 20px;
+    margin-top: 20px;
 }
 
 .header nav {
     float: right;
-    padding: 25px 20px 0 0;
+    padding: 20px 20px 0 0;
 }
 
 #high-scores:hover {
@@ -51,7 +52,7 @@ body {
 
 #start-quiz-btn {
     display: block;
-    margin: 0 auto; /* 0 is top and bottom, auto is right and left */
+    margin: 0 auto; /* 0 is top and bottom, auto is right and left. this margin centers the button horizontally. */
 }
 /* source for how to center a button in a div: https://stackoverflow.com/questions/15300234/how-can-i-horizontally-center-a-button-element-in-a-div-element */
 
@@ -73,7 +74,7 @@ button:hover {
     background-color: #79ab49;
 }
 
-#choice-a, #choice-b, #choice-c, #choice-d {
+#quiz-container button {
     margin-left: 20px;
 }
 
