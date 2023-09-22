@@ -73,6 +73,10 @@ button:hover {
     background-color: #79ab49;
 }
 
+#choice-a, #choice-b, #choice-c, #choice-d {
+    margin-left: 20px;
+}
+
 .choices {
     display: inline-flex;
     margin-bottom: 10px;
