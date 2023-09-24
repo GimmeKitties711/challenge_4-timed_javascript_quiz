@@ -29,6 +29,7 @@ body {
 
 #high-scores:hover {
     color: #79ab49;
+    cursor: default;
 }
 
 #time-lost {
@@ -63,7 +64,7 @@ body {
 #quiz-container {
     max-width: 600px;
     max-height: 800px;
-    display: none;
+    /*display: none;*/
 }
 
 #current-question {
@@ -81,4 +82,14 @@ button:hover {
 .choices {
     display: inline-flex;
     margin-bottom: 10px;
+}
+
+
+#quiz-completed-container {
+    margin-left: 20px;
+}
+
+
+#high-scores-container {
+    margin-left: 20px;
 }

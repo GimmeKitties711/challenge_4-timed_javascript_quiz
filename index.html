@@ -53,6 +53,26 @@
             </div>
         </div>
     </div>
+
+    <div id="quiz-completed-container">
+        <h2>Quiz completed.</h2>
+        <p>Your final score is 25.</p>
+        <div>
+            <form action="#high-scores-container" method="post">
+                <label for="initials">Enter your initials:</label>
+                <input type="text" id="initials" name="initials" value="AB">
+                <input type="button" id="high-scores-btn" value="Submit">
+            </form>
+            <!-- source for how to write forms: https://www.w3schools.com/html/html_forms.asp -->
+            <!-- source for how to write forms that both submit data and move to a different page: https://www.quora.com/How-can-I-create-a-HTML-button-that-submits-and-goes-to-the-next-page -->
+        </div>
+    </div>
+
+    <div id="high-scores-container">
+        <button id="home-page-btn" href="#home-container">Back to Home Page</button>
+        <button>Clear all high scores</button>
+    </div>
+
     <script src="./Assets/script.js"></script>
 </body>
 </html>

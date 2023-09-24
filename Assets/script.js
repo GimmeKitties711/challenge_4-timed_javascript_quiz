@@ -91,15 +91,59 @@ var questions = [
     }
 ];
 
+var headerElem = document.querySelector('.header');
+var headerHighScoresLink = document.getElementById('high-scores');
 var startQuizBtn = document.getElementById('start-quiz-btn');
+var homePageBtn = document.getElementById('home-page-btn');
+var highScoresBtn = document.getElementById('high-scores-btn');
 var homeContainer = document.getElementById('home-container');
 var quizContainer = document.getElementById('quiz-container');
+var quizCompletedContainer = document.getElementById('quiz-completed-container');
+var highScoresContainer = document.getElementById('high-scores-container');
 
-function pageHomeToQuiz() {
+function changePageToQuiz() {
     homeContainer.style.display = "none";
-    quizContainer.style.display = "block";
+    quizContainer.style.display = "block"
+    quizCompletedContainer.style.display = "none";
+    highScoresContainer.style.display = "none";
 }
 
-startQuizBtn.addEventListener("click", pageHomeToQuiz);
+startQuizBtn.addEventListener("click", changePageToQuiz);
 
 // source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
+
+function changePageToHighScores() {
+    homeContainer.style.display = "none";
+    quizContainer.style.display = "none"
+    quizCompletedContainer.style.display = "none";
+    highScoresContainer.style.display = "block";
+}
+
+function hideHeader () {
+    headerElem.style.visibility = "hidden";
+}
+
+function revealHeader() {
+    headerElem.style.visibility = "visible";
+}
+
+highScoresBtn.addEventListener("click", function () {
+    changePageToHighScores();
+    hideHeader()
+});
+headerHighScoresLink.addEventListener("click", function() {
+    changePageToHighScores();
+    hideHeader()
+});
+
+function changePageToHome() {
+    homeContainer.style.display = "block";
+    quizContainer.style.display = "none"
+    quizCompletedContainer.style.display = "none";
+    highScoresContainer.style.display = "none";
+}
+
+homePageBtn.addEventListener("click", function () {
+    changePageToHome();
+    revealHeader();
+});
