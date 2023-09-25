@@ -34,8 +34,8 @@ body {
 
 #time-lost {
     color: red;
-    /*visibility: hidden;*/
-    padding-left: 36px;
+    visibility: hidden;
+    float: right;
 }
 
 #home-container {
