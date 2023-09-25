@@ -137,10 +137,6 @@ homePageBtn.addEventListener("click", function () {
     revealHeader();
 });
 
-// for (let item in questions) {
-//     console.log(questions[item]);
-// }
-
 var currentQuestion = document.getElementById('current-question');
 var contentA = document.getElementById('content-a');
 var contentB = document.getElementById('content-b');
@@ -158,7 +154,17 @@ var timeLeft = document.getElementById('time-left');
 var timeLost = document.getElementById('time-lost');
 var timeRemaining = 75;
 
+function changePageToQuizCompleted () {
+    homeContainer.style.display = "none";
+    quizContainer.style.display = "none"
+    quizCompletedContainer.style.display = "block";
+    highScoresContainer.style.display = "none";
+}
+
 function displayNextQuestion(clickedBtn) {
+    if (questionCounter === questions.length) {
+        changePageToQuizCompleted();
+    }
     currentQuestion.textContent = questions[questionCounter].question;
     contentA.textContent = questions[questionCounter].a;
     contentB.textContent = questions[questionCounter].b;
@@ -171,39 +177,28 @@ function displayNextQuestion(clickedBtn) {
             timeLost.style.visibility = "hidden";
         }, 2000);
     }
-    if (questionCounter < questions.length-1) {
+    if (questionCounter < questions.length) {
         questionCounter++;
     }
 }
 
-// displayTimer = setTimeout(function () {
-//     saveText.hide(400); // hide saveText at the default speed (takes 400 ms)
-// }, 4000);
+var choiceA = document.getElementById('choice-a');
+var choiceB = document.getElementById('choice-b');
+var choiceC = document.getElementById('choice-c');
+var choiceD = document.getElementById('choice-d');
 
-var choice_a = document.getElementById('choice-a');
-var choice_b = document.getElementById('choice-b');
-var choice_c = document.getElementById('choice-c');
-var choice_d = document.getElementById('choice-d');
-
-choice_a.addEventListener("click", function() {
+choiceA.addEventListener("click", function() {
     displayNextQuestion("a");
 });
-choice_b.addEventListener("click", function() {
+choiceB.addEventListener("click", function() {
     displayNextQuestion("b");
 });
-choice_c.addEventListener("click", function() {
+choiceC.addEventListener("click", function() {
     displayNextQuestion("c");
 });
-choice_d.addEventListener("click", function() {
+choiceD.addEventListener("click", function() {
     displayNextQuestion("d");
 });
-
-function changePageToQuizCompleted () {
-    homeContainer.style.display = "none";
-    quizContainer.style.display = "none"
-    quizCompletedContainer.style.display = "block";
-    highScoresContainer.style.display = "none";
-}
 
 function quizInProgress() {
     var quizTimer = setInterval(function () {
@@ -219,33 +214,3 @@ function quizInProgress() {
 // source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
 
 startQuizBtn.addEventListener("click", quizInProgress);
-
-// function addUniqueId(objData) {
-//     let index = 1; // ids start from 1
-//     for (let item in objData) {
-//         objData[item].id = index;
-//         index++;
-//         // for every item in the array of objects, set its id parameter to index then increment index by 1
-//     }
-//     return objData;
-// }
-
-// var timeleft = 10;
-// var downloadTimer = setInterval(function(){
-//   if(timeleft <= 0){
-//     clearInterval(downloadTimer);
-//     document.getElementById("countdown").innerHTML = "Finished";
-//   } else {
-//     document.getElementById("countdown").innerHTML = timeleft + " seconds remaining";
-//   }
-//   timeleft -= 1;
-// }, 1000);
-
-// var timeleft = 10;
-// var downloadTimer = setInterval(function(){
-//   if(timeleft <= 0){
-//     clearInterval(downloadTimer);
-//   }
-//   document.getElementById("progressBar").value = 10 - timeleft;
-//   timeleft -= 1;
-// }, 1000);
