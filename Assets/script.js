@@ -85,14 +85,12 @@ var headerElem = document.querySelector('.header');
 var headerHighScoresShorter = document.getElementById('high-scores-shorter');
 var headerHighScoresLonger = document.getElementById('high-scores-longer');
 var startQuizBtn = document.getElementById('start-quiz-btn');
-var homePageBtn = document.getElementById('home-page-btn');
+var homeOrQuizPageBtn = document.getElementById('home-or-quiz-page-btn');
 var highScoresBtn = document.getElementById('high-scores-btn');
 var homeContainer = document.getElementById('home-container');
 var quizContainer = document.getElementById('quiz-container');
 var quizCompletedContainer = document.getElementById('quiz-completed-container');
 var highScoresContainer = document.getElementById('high-scores-container');
-
-var timeRemaining = 75;
 
 function displayInitialQuestions() {
     currentQuestion.textContent = questions[0].question;
@@ -102,24 +100,79 @@ function displayInitialQuestions() {
     contentD.textContent = questions[0].d;
 }
 
+var quizTimer;
+var questionCounter = 1;
+var timeRemaining = 75;
+var timeLeft = document.getElementById('time-left');
+var pause = false;
+
+function quizInProgress() {
+    homeOrQuizPageBtn.addEventListener("click", changePageToQuiz);
+    quizTimer = setInterval(function () {
+        if (pause) {
+            return;
+        }
+        if (timeRemaining <= 0) {
+            clearInterval(quizTimer);
+            changePageToQuizCompleted();
+        } else if (timeRemaining > 0) {
+            timeLeft.innerHTML = `Time: ${timeRemaining-1}`
+        }
+        timeRemaining--;
+    }, 1000);
+}
+
+function resumeQuiz(newTimeRemaining) {
+    var resumeQuizTimer = setInterval(function () {
+        
+    })
+}
+// source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
+
+// var pause = false;
+
+// setInterval(function() {
+//     if (pause) return;
+
+//     timer --;
+// });
+
+startQuizBtn.addEventListener("click", quizInProgress);
+
 function changePageToQuiz() {
+    if (highScoresContainer.style.display === "block") {
+        pause = false;
+        var newTimeRemaining = parseInt(timeLeft.textContent.split(' ')[1])+1;
+        quizInProgress(newTimeRemaining);
+    }
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "none";
     headerHighScoresLonger.style.display = "inline-block";
-    timeRemaining = 75;
-    displayInitialQuestions();
-    questionCounter = 1;
+    if (questionCounter === 1 || questionCounter === questions.length) {
+        timeRemaining = 75;
+        displayInitialQuestions();
+        questionCounter = 1;
+    }
 }
 
 startQuizBtn.addEventListener("click", changePageToQuiz);
 // source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
 
 function changePageToHighScores() {
+    if (quizContainer.style.display === "block") {
+        homeOrQuizPageBtn.textContent = "Back to Quiz";
+        homeOrQuizPageBtn.setAttribute("href", "#quiz-container");
+        clearInterval(quizTimer);
+        pause = true;
+    } else {
+        homeOrQuizPageBtn.textContent = "Back to Home Page";
+        homeOrQuizPageBtn.setAttribute("href", "#home-container");
+    }
     homeContainer.style.display = "none";
-    quizContainer.style.display = "none"
+    quizContainer.style.display = "none";
     quizCompletedContainer.style.display = "none";
     highScoresContainer.style.display = "block";
 }
@@ -157,9 +210,9 @@ function changePageToHome() {
     timeLeft.textContent = `Time: ${timeRemaining}`;
 }
 
-homePageBtn.addEventListener("click", function () {
+homeOrQuizPageBtn.addEventListener("click", function () {
     changePageToHome();
-    revealHeader();
+    revealHeader()
 });
 
 var currentQuestion = document.getElementById('current-question');
@@ -167,10 +220,6 @@ var contentA = document.getElementById('content-a');
 var contentB = document.getElementById('content-b');
 var contentC = document.getElementById('content-c');
 var contentD = document.getElementById('content-d');
-
-var questionCounter = 1;
-var timeLeft = document.getElementById('time-left');
-var timeLost = document.getElementById('time-lost');
 
 var finalScore = document.getElementById('final-score');
 
@@ -182,11 +231,34 @@ function changePageToQuizCompleted () {
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
     timeLeft.textContent = `Time: ${timeRemaining}`;
-    finalScore.textContent = `Your final score is ${timeRemaining}`;
+    finalScore.textContent = `Your final score is ${timeRemaining}.`;
 }
 
-var quizTimer;
-var hideLossTimer;
+var showIncorrect;
+var hideIncorrect;
+var showTimeLost;
+var hideTimeLost;
+var showCorrect;
+var hideCorrect;
+
+var incorrect = document.getElementById('incorrect');
+var timeLost = document.getElementById('time-lost');
+var correct = document.getElementById('correct');
+
+function handlePopUp(elem, showName, hideName) {
+    if (elem.style.display !== "none") {
+        elem.style.display = "none";
+        showName = setTimeout(function () {
+            elem.style.display = "block";
+        }, 400);
+    } else {
+        elem.style.display = "block";
+    }
+    clearTimeout(hideName); // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
+    hideName = setTimeout(function () {
+        elem.style.display = "none";
+    }, 2000);
+}
 
 function displayNextQuestion(clickedBtn) {
     if (questionCounter === questions.length) {
@@ -205,22 +277,15 @@ function displayNextQuestion(clickedBtn) {
     }
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
-        if (timeLost.style.visibility !== "hidden") {
-            timeLost.style.visibility = "hidden";
-            var showLossTimer = setTimeout(function() {
-               timeLost.style.visibility = "visible"; 
-            }, 400);
-        } else {
-            timeLost.style.visibility = "visible";
-        }
-        clearTimeout(hideLossTimer); // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
-        hideLossTimer = setTimeout(function () {
-            timeLost.style.visibility = "hidden";
-        }, 2000);
+        correct.style.display = "none";
+        handlePopUp(incorrect, showIncorrect, hideIncorrect);
+        handlePopUp(timeLost, showTimeLost, hideTimeLost);
+    } else {
+        incorrect.style.display = "none";
+        handlePopUp(correct, showCorrect, hideCorrect);
     }
     if (questionCounter < questions.length) {
         questionCounter++;
-        console.log(questionCounter, questionCounter-1);
     }
 }
 
@@ -241,18 +306,3 @@ choiceC.addEventListener("click", function() {
 choiceD.addEventListener("click", function() {
     displayNextQuestion("d");
 });
-
-function quizInProgress() {
-    quizTimer = setInterval(function () {
-        if (timeRemaining < 0) {
-            clearInterval(quizTimer);
-            changePageToQuizCompleted();
-        } else {
-            timeLeft.innerHTML = `Time: ${timeRemaining-1}`
-        }
-        timeRemaining--;
-    }, 1000);
-}
-// source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
-
-startQuizBtn.addEventListener("click", quizInProgress);

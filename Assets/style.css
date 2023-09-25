@@ -22,19 +22,23 @@ body {
     margin-top: 20px;
 }
 
+#high-scores-longer {
+    display: none;
+}
+
 .header nav {
     float: right;
     padding: 20px 20px 0 0;
 }
 
-#high-scores:hover {
+#high-scores-shorter:hover, #high-scores-longer:hover {
     color: #79ab49;
     cursor: default;
 }
 
 #time-lost {
+    display: none;
     color: red;
-    visibility: hidden;
     float: right;
 }
 
@@ -62,9 +66,9 @@ body {
 }
 
 #quiz-container {
+    display: none;
     max-width: 600px;
     max-height: 800px;
-    /*display: none;*/
 }
 
 #current-question {
@@ -84,12 +88,25 @@ button:hover {
     margin-bottom: 10px;
 }
 
+#correct {
+    display: none;
+    color: green;
+    margin-left: 20px;
+}
+
+#incorrect {
+    display: none;
+    color: red;
+    margin-left: 20px;
+}
 
 #quiz-completed-container {
+    display: none;
     margin-left: 20px;
 }
 
 
 #high-scores-container {
+    display: none;
     margin-left: 20px;
 }
