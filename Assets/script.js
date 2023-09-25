@@ -92,6 +92,16 @@ var quizContainer = document.getElementById('quiz-container');
 var quizCompletedContainer = document.getElementById('quiz-completed-container');
 var highScoresContainer = document.getElementById('high-scores-container');
 
+var timeRemaining = 75;
+
+function displayInitialQuestions() {
+    currentQuestion.textContent = questions[0].question;
+    contentA.textContent = questions[0].a;
+    contentB.textContent = questions[0].b;
+    contentC.textContent = questions[0].c;
+    contentD.textContent = questions[0].d;
+}
+
 function changePageToQuiz() {
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
@@ -99,6 +109,9 @@ function changePageToQuiz() {
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "none";
     headerHighScoresLonger.style.display = "inline-block";
+    timeRemaining = 75;
+    displayInitialQuestions();
+    questionCounter = 1;
 }
 
 startQuizBtn.addEventListener("click", changePageToQuiz);
@@ -140,6 +153,8 @@ function changePageToHome() {
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
+    timeRemaining = 75;
+    timeLeft.textContent = `Time: ${timeRemaining}`;
 }
 
 homePageBtn.addEventListener("click", function () {
@@ -153,16 +168,9 @@ var contentB = document.getElementById('content-b');
 var contentC = document.getElementById('content-c');
 var contentD = document.getElementById('content-d');
 
-currentQuestion.textContent = questions[0].question;
-contentA.textContent = questions[0].a;
-contentB.textContent = questions[0].b;
-contentC.textContent = questions[0].c;
-contentD.textContent = questions[0].d;
-
 var questionCounter = 1;
 var timeLeft = document.getElementById('time-left');
 var timeLost = document.getElementById('time-lost');
-var timeRemaining = 75;
 
 var finalScore = document.getElementById('final-score');
 
@@ -173,6 +181,7 @@ function changePageToQuizCompleted () {
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
+    timeLeft.textContent = `Time: ${timeRemaining}`;
     finalScore.textContent = `Your final score is ${timeRemaining}`;
 }
 
@@ -181,6 +190,9 @@ var hideLossTimer;
 
 function displayNextQuestion(clickedBtn) {
     if (questionCounter === questions.length) {
+        if (clickedBtn !== questions[questionCounter-1].correct) {
+            timeRemaining -= 5;
+        }
         changePageToQuizCompleted();
         clearInterval(quizTimer);
     }
