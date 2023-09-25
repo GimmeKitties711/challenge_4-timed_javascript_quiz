@@ -82,7 +82,8 @@ var questions = [
 ];
 
 var headerElem = document.querySelector('.header');
-var headerHighScoresLink = document.getElementById('high-scores-shorter');
+var headerHighScoresShorter = document.getElementById('high-scores-shorter');
+var headerHighScoresLonger = document.getElementById('high-scores-longer');
 var startQuizBtn = document.getElementById('start-quiz-btn');
 var homePageBtn = document.getElementById('home-page-btn');
 var highScoresBtn = document.getElementById('high-scores-btn');
@@ -96,6 +97,8 @@ function changePageToQuiz() {
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
     highScoresContainer.style.display = "none";
+    headerHighScoresShorter.style.display = "none";
+    headerHighScoresLonger.style.display = "inline-block";
 }
 
 startQuizBtn.addEventListener("click", changePageToQuiz);
@@ -120,7 +123,12 @@ highScoresBtn.addEventListener("click", function () {
     changePageToHighScores();
     hideHeader()
 });
-headerHighScoresLink.addEventListener("click", function() {
+headerHighScoresShorter.addEventListener("click", function() {
+    changePageToHighScores();
+    hideHeader()
+});
+
+headerHighScoresLonger.addEventListener("click", function() {
     changePageToHighScores();
     hideHeader()
 });
@@ -130,6 +138,8 @@ function changePageToHome() {
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "none";
     highScoresContainer.style.display = "none";
+    headerHighScoresShorter.style.display = "inline-block";
+    headerHighScoresLonger.style.display = "none";
 }
 
 homePageBtn.addEventListener("click", function () {
@@ -154,31 +164,51 @@ var timeLeft = document.getElementById('time-left');
 var timeLost = document.getElementById('time-lost');
 var timeRemaining = 75;
 
+var finalScore = document.getElementById('final-score');
+
 function changePageToQuizCompleted () {
     homeContainer.style.display = "none";
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "block";
     highScoresContainer.style.display = "none";
+    headerHighScoresShorter.style.display = "inline-block";
+    headerHighScoresLonger.style.display = "none";
+    finalScore.textContent = `Your final score is ${timeRemaining}`;
 }
+
+var quizTimer;
+var hideLossTimer;
 
 function displayNextQuestion(clickedBtn) {
     if (questionCounter === questions.length) {
         changePageToQuizCompleted();
+        clearInterval(quizTimer);
     }
-    currentQuestion.textContent = questions[questionCounter].question;
-    contentA.textContent = questions[questionCounter].a;
-    contentB.textContent = questions[questionCounter].b;
-    contentC.textContent = questions[questionCounter].c;
-    contentD.textContent = questions[questionCounter].d;
+    if (questionCounter < questions.length) {
+        currentQuestion.textContent = questions[questionCounter].question;
+        contentA.textContent = questions[questionCounter].a;
+        contentB.textContent = questions[questionCounter].b;
+        contentC.textContent = questions[questionCounter].c;
+        contentD.textContent = questions[questionCounter].d;
+    }
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
-        timeLost.style.visibility = "visible";
-        var hideLossTimer = setTimeout(function () {
+        if (timeLost.style.visibility !== "hidden") {
+            timeLost.style.visibility = "hidden";
+            var showLossTimer = setTimeout(function() {
+               timeLost.style.visibility = "visible"; 
+            }, 400);
+        } else {
+            timeLost.style.visibility = "visible";
+        }
+        clearTimeout(hideLossTimer); // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
+        hideLossTimer = setTimeout(function () {
             timeLost.style.visibility = "hidden";
         }, 2000);
     }
     if (questionCounter < questions.length) {
         questionCounter++;
+        console.log(questionCounter, questionCounter-1);
     }
 }
 
@@ -201,12 +231,12 @@ choiceD.addEventListener("click", function() {
 });
 
 function quizInProgress() {
-    var quizTimer = setInterval(function () {
+    quizTimer = setInterval(function () {
         if (timeRemaining < 0) {
             clearInterval(quizTimer);
             changePageToQuizCompleted();
         } else {
-            timeLeft.innerHTML = `Time: ${timeRemaining}`
+            timeLeft.innerHTML = `Time: ${timeRemaining-1}`
         }
         timeRemaining--;
     }, 1000);
