@@ -228,22 +228,22 @@ function changePageToQuizCompleted () {
 // getElementById(initials).value
 // module 4, 5
 
-var showIncorrect;
-var hideIncorrect;
-var showTimeLost;
-var hideTimeLost;
-var showCorrect;
-var hideCorrect;
-var showIncorrectAfterQuiz;
-var hideIncorrectAfterQuiz;
-var showCorrectAfterQuiz;
-var hideCorrectAfterQuiz;
+// var showIncorrect;
+// var hideIncorrect;
+// var showTimeLost;
+// var hideTimeLost;
+// var showCorrect;
+// var hideCorrect;
+// var showIncorrectAfterQuiz;
+// var hideIncorrectAfterQuiz;
+// var showCorrectAfterQuiz;
+// var hideCorrectAfterQuiz;
 
-var incorrect = document.getElementById('incorrect');
-var timeLost = document.getElementById('time-lost');
-var correct = document.getElementById('correct');
-var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
-var correctAfterQuiz = document.getElementById('correct-after-quiz');
+// var incorrect = document.getElementById('incorrect');
+// var timeLost = document.getElementById('time-lost');
+// var correct = document.getElementById('correct');
+// var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
+// var correctAfterQuiz = document.getElementById('correct-after-quiz');
 
 // var saveText = $('#saveNotification');
 
@@ -256,35 +256,71 @@ var correctAfterQuiz = document.getElementById('correct-after-quiz');
 //         saveText.hide(400); // hide saveText at the default speed (takes 400 ms)
 //       }, 4000); // the hide animation takes place after 4000 ms (4 sec) have passed
 
-function handlePopUp(elem, showName) {
-    clearTimeout(showName);
+// var showIncorrect;
+// var hideIncorrect;
+// var showTimeLost;
+// var hideTimeLost;
+// var showCorrect;
+// var hideCorrect;
+// var showIncorrectAfterQuiz;
+// var hideIncorrectAfterQuiz;
+// var showCorrectAfterQuiz;
+// var hideCorrectAfterQuiz;
+
+var incorrect = document.getElementById('incorrect');
+var timeLost = document.getElementById('time-lost');
+var correct = document.getElementById('correct');
+var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
+var correctAfterQuiz = document.getElementById('correct-after-quiz');
+
+// var timer;
+// $('#mybtn').on('click', function(e){   
+//    var $mytext = $('#mytext');    
+//    $mytext.show(500);
+//    clearTimeout(timer);   
+//    timer = setTimeout(function(){
+//        $mytext.hide(500)
+//     },10000);        
+// });
+
+// var showTimer;
+// var hideTimer;
+
+// var showTimer;
+// var hideTimer;
+
+function handlePopUp(elem) {
+    var showTimer;
+    var hideTimer;
+    // clearTimeout(showTimer);
+    // clearTimeout(hideTimer);
+    
+    
     // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
     if (elem.style.display !== "none") {
         elem.style.display = "none";
-        showName = setTimeout(function () {
+        clearTimeout(showTimer);
+        setTimeout(function () {
             elem.style.display = "block";
         }, 400);
     } else {
         elem.style.display = "block";
     }
-}
-
-function handleHide(elem, hideName) {
-    clearTimeout(hideName);
-    hideName = setTimeout(function () {
+    // clearTimeout(hideTimer);
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(function () {
         elem.style.display = "none";
     }, 3000);
 }
 
 function displayNextQuestion(clickedBtn) {
+    
     if (questionCounter === questions.length) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
-            handlePopUp(incorrectAfterQuiz, showIncorrectAfterQuiz);
-            handleHide(incorrectAfterQuiz, hideIncorrectAfterQuiz);
+            handlePopUp(incorrectAfterQuiz);
         } else {
-            handlePopUp(correctAfterQuiz, showCorrectAfterQuiz);
-            handleHide(correctAfterQuiz, hideCorrectAfterQuiz);
+            handlePopUp(correctAfterQuiz);
         }
         clearInterval(quizTimer);
         changePageToQuizCompleted();
@@ -299,14 +335,11 @@ function displayNextQuestion(clickedBtn) {
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
         correct.style.display = "none";
-        handlePopUp(incorrect, showIncorrect);
-        handleHide(incorrect, hideIncorrect);
-        handlePopUp(timeLost, showTimeLost);
-        handleHide(timeLost, hideTimeLost);
+        handlePopUp(incorrect);
+        handlePopUp(timeLost);
     } else {
         incorrect.style.display = "none";
-        handlePopUp(correct, showCorrect);
-        handleHide(correct, hideCorrect);
+        handlePopUp(correct);
     }
     if (questionCounter < questions.length) {
         questionCounter++;
