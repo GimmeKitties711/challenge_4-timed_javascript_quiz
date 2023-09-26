@@ -209,6 +209,7 @@ var contentB = document.getElementById('content-b');
 var contentC = document.getElementById('content-c');
 var contentD = document.getElementById('content-d');
 
+var quizCompleted = document.getElementById('quiz-completed');
 var finalScore = document.getElementById('final-score');
 
 function changePageToQuizCompleted () {
@@ -218,6 +219,9 @@ function changePageToQuizCompleted () {
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
+    if (questionCounter < questions.length) {
+        quizCompleted.textContent = "Quiz partially completed.";
+    }
     if (timeRemaining < 0) {
         timeRemaining = 0;
     }
@@ -299,10 +303,7 @@ function handlePopUp(elem) {
     // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
     if (elem.style.display !== "none") {
         elem.style.display = "none";
-        clearTimeout(showTimer);
-        setTimeout(function () {
-            elem.style.display = "block";
-        }, 400);
+        elem.style.animation = 'fading 2s infinite';
     } else {
         elem.style.display = "block";
     }
