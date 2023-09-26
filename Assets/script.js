@@ -107,9 +107,9 @@ var timeLeft = document.getElementById('time-left');
 var pause = false;
 
 function quizInProgress() {
+    console.log('quizInProgress was called');
     quizTimer = setInterval(function () {
         if (pause) {
-            homeOrQuizPageBtn.addEventListener("click", changePageToQuiz);
             return;
         }
         if (timeRemaining <= 0) {
@@ -124,23 +124,9 @@ function quizInProgress() {
 
 // source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
 
-// var pause = false;
-
-// setInterval(function() {
-//     if (pause) return;
-
-//     timer --;
-// });
-
-// startQuizBtn.addEventListener("click", quizInProgress);
-// one...
-
-var quizCompleted = false;
-
 function changePageToQuiz() {
+    console.log('changePageToQuiz was called');
     pause = false;
-    quizCompleted = false;
-    quizInProgress();
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
@@ -150,19 +136,20 @@ function changePageToQuiz() {
     if (questionCounter === 1 || questionCounter === questions.length) {
         timeRemaining = 75;
         displayInitialQuestions();
-        questionCounter = 1;
+        if (questionCounter === questions.length) {
+            questionCounter = 1;
+        }
+        quizInProgress();
     }
 }
 
 startQuizBtn.addEventListener("click", changePageToQuiz);
-// ...two event listeners for same button (fix)
 // source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
 
 function changePageToHighScores() {
     if (quizContainer.style.display === "block") {
         homeOrQuizPageBtn.textContent = "Back to Quiz";
         homeOrQuizPageBtn.setAttribute("href", "#quiz-container");
-        // clearInterval(quizTimer);
         pause = true;
     } else {
         homeOrQuizPageBtn.textContent = "Back to Home Page";
@@ -236,9 +223,6 @@ function changePageToQuizCompleted () {
     }
     timeLeft.textContent = `Time: ${timeRemaining}`;
     finalScore.textContent = `Your final score is ${timeRemaining}.`;
-    quizCompleted = true;
-    // set a flag at this point because the quiz has been completed
-    // use it in function below
 }
 
 // getElementById(initials).value
@@ -250,12 +234,31 @@ var showTimeLost;
 var hideTimeLost;
 var showCorrect;
 var hideCorrect;
+var showIncorrectAfterQuiz;
+var hideIncorrectAfterQuiz;
+var showCorrectAfterQuiz;
+var hideCorrectAfterQuiz;
 
 var incorrect = document.getElementById('incorrect');
 var timeLost = document.getElementById('time-lost');
 var correct = document.getElementById('correct');
+var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
+var correctAfterQuiz = document.getElementById('correct-after-quiz');
 
-function handlePopUp(elem, showName, hideName) {
+// var saveText = $('#saveNotification');
+
+//       if (saveText.css("display") !== "none") {
+//         saveText.hide(200); // if the save button has already been clicked and it is clicked again before the save notification has left the screen, hide the save notification for 200 ms (0.2 sec) before showing it again
+//       }
+//       saveText.show(400); // the animation of showing saveText takes 400 ms (the default value)
+//       clearTimeout(displayTimer); // reset the timer every time the save button is clicked
+//       displayTimer = setTimeout(function () {
+//         saveText.hide(400); // hide saveText at the default speed (takes 400 ms)
+//       }, 4000); // the hide animation takes place after 4000 ms (4 sec) have passed
+
+function handlePopUp(elem, showName) {
+    clearTimeout(showName);
+    // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
     if (elem.style.display !== "none") {
         elem.style.display = "none";
         showName = setTimeout(function () {
@@ -264,19 +267,27 @@ function handlePopUp(elem, showName, hideName) {
     } else {
         elem.style.display = "block";
     }
-    clearTimeout(hideName); // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
+}
+
+function handleHide(elem, hideName) {
+    clearTimeout(hideName);
     hideName = setTimeout(function () {
         elem.style.display = "none";
-    }, 2000);
+    }, 3000);
 }
 
 function displayNextQuestion(clickedBtn) {
     if (questionCounter === questions.length) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
+            handlePopUp(incorrectAfterQuiz, showIncorrectAfterQuiz);
+            handleHide(incorrectAfterQuiz, hideIncorrectAfterQuiz);
+        } else {
+            handlePopUp(correctAfterQuiz, showCorrectAfterQuiz);
+            handleHide(correctAfterQuiz, hideCorrectAfterQuiz);
         }
-        changePageToQuizCompleted();
         clearInterval(quizTimer);
+        changePageToQuizCompleted();
     }
     if (questionCounter < questions.length) {
         currentQuestion.textContent = questions[questionCounter].question;
@@ -288,11 +299,14 @@ function displayNextQuestion(clickedBtn) {
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
         correct.style.display = "none";
-        handlePopUp(incorrect, showIncorrect, hideIncorrect);
-        handlePopUp(timeLost, showTimeLost, hideTimeLost);
+        handlePopUp(incorrect, showIncorrect);
+        handleHide(incorrect, hideIncorrect);
+        handlePopUp(timeLost, showTimeLost);
+        handleHide(timeLost, hideTimeLost);
     } else {
         incorrect.style.display = "none";
-        handlePopUp(correct, showCorrect, hideCorrect);
+        handlePopUp(correct, showCorrect);
+        handleHide(correct, hideCorrect);
     }
     if (questionCounter < questions.length) {
         questionCounter++;

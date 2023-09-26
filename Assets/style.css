@@ -105,6 +105,15 @@ button:hover {
     margin-left: 20px;
 }
 
+#correct-after-quiz {
+    display: none;
+    color: green;
+}
+
+#incorrect-after-quiz {
+    display: none;
+    color: red;
+}
 
 #high-scores-container {
     display: none;
