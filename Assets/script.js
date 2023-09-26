@@ -107,9 +107,9 @@ var timeLeft = document.getElementById('time-left');
 var pause = false;
 
 function quizInProgress() {
-    homeOrQuizPageBtn.addEventListener("click", changePageToQuiz);
     quizTimer = setInterval(function () {
         if (pause) {
+            homeOrQuizPageBtn.addEventListener("click", changePageToQuiz);
             return;
         }
         if (timeRemaining <= 0) {
@@ -132,14 +132,15 @@ function quizInProgress() {
 //     timer --;
 // });
 
-startQuizBtn.addEventListener("click", quizInProgress);
+// startQuizBtn.addEventListener("click", quizInProgress);
 // one...
 
+var quizCompleted = false;
+
 function changePageToQuiz() {
-    if (highScoresContainer.style.display === "block") {
-        pause = false;
-        quizInProgress();
-    }
+    pause = false;
+    quizCompleted = false;
+    quizInProgress();
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
@@ -207,7 +208,11 @@ function changePageToHome() {
 }
 
 homeOrQuizPageBtn.addEventListener("click", function () {
-    changePageToHome();
+    if (!pause) {
+        changePageToHome();
+    } else {
+        changePageToQuiz();
+    }
     revealHeader()
 });
 
@@ -226,8 +231,12 @@ function changePageToQuizCompleted () {
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
+    if (timeRemaining < 0) {
+        timeRemaining = 0;
+    }
     timeLeft.textContent = `Time: ${timeRemaining}`;
     finalScore.textContent = `Your final score is ${timeRemaining}.`;
+    quizCompleted = true;
     // set a flag at this point because the quiz has been completed
     // use it in function below
 }
