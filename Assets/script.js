@@ -122,11 +122,6 @@ function quizInProgress() {
     }, 1000);
 }
 
-function resumeQuiz(newTimeRemaining) {
-    var resumeQuizTimer = setInterval(function () {
-        
-    })
-}
 // source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
 
 // var pause = false;
@@ -138,12 +133,12 @@ function resumeQuiz(newTimeRemaining) {
 // });
 
 startQuizBtn.addEventListener("click", quizInProgress);
+// one...
 
 function changePageToQuiz() {
     if (highScoresContainer.style.display === "block") {
         pause = false;
-        var newTimeRemaining = parseInt(timeLeft.textContent.split(' ')[1])+1;
-        quizInProgress(newTimeRemaining);
+        quizInProgress();
     }
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
@@ -159,13 +154,14 @@ function changePageToQuiz() {
 }
 
 startQuizBtn.addEventListener("click", changePageToQuiz);
+// ...two event listeners for same button (fix)
 // source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
 
 function changePageToHighScores() {
     if (quizContainer.style.display === "block") {
         homeOrQuizPageBtn.textContent = "Back to Quiz";
         homeOrQuizPageBtn.setAttribute("href", "#quiz-container");
-        clearInterval(quizTimer);
+        // clearInterval(quizTimer);
         pause = true;
     } else {
         homeOrQuizPageBtn.textContent = "Back to Home Page";
@@ -232,7 +228,12 @@ function changePageToQuizCompleted () {
     headerHighScoresLonger.style.display = "none";
     timeLeft.textContent = `Time: ${timeRemaining}`;
     finalScore.textContent = `Your final score is ${timeRemaining}.`;
+    // set a flag at this point because the quiz has been completed
+    // use it in function below
 }
+
+// getElementById(initials).value
+// module 4, 5
 
 var showIncorrect;
 var hideIncorrect;
