@@ -36,12 +36,6 @@ body {
     cursor: default;
 }
 
-#time-lost {
-    display: none;
-    color: red;
-    float: right;
-}
-
 #home-container {
     max-width: var(--window-width);
 }
@@ -88,31 +82,9 @@ button:hover {
     margin-bottom: 10px;
 }
 
-#correct {
-    display: none;
-    color: green;
-    margin-left: 20px;
-}
-
-#incorrect {
-    display: none;
-    color: red;
-    margin-left: 20px;
-}
-
 #quiz-completed-container {
     display: none;
     margin-left: 20px;
-}
-
-#correct-after-quiz {
-    display: none;
-    color: green;
-}
-
-#incorrect-after-quiz {
-    display: none;
-    color: red;
 }
 
 #high-scores-container {

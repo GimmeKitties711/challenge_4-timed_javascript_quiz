@@ -119,6 +119,9 @@ function quizInProgress() {
         } else if (timeRemaining > 0) {
             timeLeftString = 'Time: ' + (timeRemaining-1);
             timeLeft.textContent = timeLeftString;
+            if (timeRemaining <= 10) {
+                timeLeft.style.color = 'red';
+            }
         }
         timeRemaining--;
     }, 1000);
@@ -241,206 +244,38 @@ function changePageToQuizCompleted () {
     quizStarted = false;
 }
 
-// getElementById(initials).value
-// module 4, 5
-
-// var showIncorrect;
-// var hideIncorrect;
-// var showTimeLost;
-// var hideTimeLost;
-// var showCorrect;
-// var hideCorrect;
-// var showIncorrectAfterQuiz;
-// var hideIncorrectAfterQuiz;
-// var showCorrectAfterQuiz;
-// var hideCorrectAfterQuiz;
-
-// var incorrect = document.getElementById('incorrect');
-// var timeLost = document.getElementById('time-lost');
-// var correct = document.getElementById('correct');
-// var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
-// var correctAfterQuiz = document.getElementById('correct-after-quiz');
-
-// var saveText = $('#saveNotification');
-
-//       if (saveText.css("display") !== "none") {
-//         saveText.hide(200); // if the save button has already been clicked and it is clicked again before the save notification has left the screen, hide the save notification for 200 ms (0.2 sec) before showing it again
-//       }
-//       saveText.show(400); // the animation of showing saveText takes 400 ms (the default value)
-//       clearTimeout(displayTimer); // reset the timer every time the save button is clicked
-//       displayTimer = setTimeout(function () {
-//         saveText.hide(400); // hide saveText at the default speed (takes 400 ms)
-//       }, 4000); // the hide animation takes place after 4000 ms (4 sec) have passed
-
-// var showIncorrect;
-// var hideIncorrect;
-// var showTimeLost;
-// var hideTimeLost;
-// var showCorrect;
-// var hideCorrect;
-// var showIncorrectAfterQuiz;
-// var hideIncorrectAfterQuiz;
-// var showCorrectAfterQuiz;
-// var hideCorrectAfterQuiz;
-
-// var incorrect = $('#incorrect');
-// var timeLost = $('#time-lost');
-// var correct = $('#correct');
-// var incorrectAfterQuiz = $('#incorrect-after-quiz');
-// var correctAfterQuiz = $('#correct-after-quiz');
-
-var incorrect = document.getElementById('incorrect');
-var timeLost = document.getElementById('time-lost');
-var correct = document.getElementById('correct');
-var incorrectAfterQuiz = document.getElementById('incorrect-after-quiz');
-var correctAfterQuiz = document.getElementById('correct-after-quiz');
-
-// var timer;
-// $('#mybtn').on('click', function(e){   
-//    var $mytext = $('#mytext');    
-//    $mytext.show(500);
-//    clearTimeout(timer);   
-//    timer = setTimeout(function(){
-//        $mytext.hide(500)
-//     },10000);        
-// });
-
-// var showTimer;
-// var hideTimer;
-
-// var showTimer;
-// var hideTimer;
-
-// var showTimerCorrect;
-// var hideTimerCorrect;
-// var showTimerIncorrect;
-// var hideTimerIncorrect;
-// var showTimeLost;
-// var hideTimeLost;
-// var showTimerCorrectAfterQuiz;
-// var hideTimerCorrectAfterQuiz;
-// var showTimerIncorrectAfterQuiz;
-// var hideTimerIncorrectAfterQuiz;
-
-// var showTimer1, showTimer2, showTimer3, showTimer4, showTimer5, showTimer6, showTimer7, showTimer8, showTimer9, showTimer10;
-// var showTimerArr = [showTimer1, showTimer2, showTimer3, showTimer4, showTimer5, showTimer6, showTimer7, showTimer8, showTimer9, showTimer10];
-// var hideTimer1, hideTimer2, hideTimer3, hideTimer4, hideTimer5, hideTimer6, hideTimer7, hideTimer8, hideTimer9, hideTimer10;
-// var hideTimerArr = [hideTimer1, hideTimer2, hideTimer3, hideTimer4, hideTimer5, hideTimer6, hideTimer7, hideTimer8, hideTimer9, hideTimer10];
-// var showTimerAfterQuiz, hideTimerAfterQuiz;
-
-function handlePopUp(elem, showName, hideName) {//, displayTimer) {
-    // var displayTimer;
-    // clearTimeout(displayTimer);
-    // if (elem.css("display") !== "none") {
-    //     elem.hide(200); 
-    // }
-    // elem.show(400);
-    // clearTimeout(displayTimer);
-    // displayTimer = setTimeout(function () {
-    //     elem.hide(400);
-    // }, 3000);
-
-    
-    // clearTimeout(showTimer);
-    // clearTimeout(hideTimer);
-    
-    //source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
-    // check first elem, then loop over the rest of the elems
-    if (elem.style.display !== "none") {
-        elem.style.display = "none";
-        clearTimeout(showName);
-        showName = setTimeout(function () {
-            elem.style.display = "block";
-        }, 400);
-    } else {
-        elem.style.display = "block";
-    }
-    // clearTimeout(hideTimer);
-    clearTimeout(hideName);
-    hideName = setTimeout(function () {
-        elem.style.display = "none";
-    }, 3000);
-}
-
-
-
-// function changeBackgroundColor(elem, value) {
-//     if (value) {
-//         elem.style.backgroundColor = "lightgreen";
-//     } else {
-//         elem.style.backgroundColor = "lightcoral";
-//     }
-
-//     clearTimeout();
-//     setTimeout(function() {
-//         elem.style.backgroundColor = "white";
-//     }, 3000);
-// }
-
-// var showTimerCorrect;
-// var hideTimerCorrect;
-// var showTimerIncorrect;
-// var hideTimerIncorrect;
-// var showTimeLost;
-// var hideTimeLost;
-// var showTimerCorrectAfterQuiz;
-// var hideTimerCorrectAfterQuiz;
-// var showTimerIncorrectAfterQuiz;
-// var hideTimerIncorrectAfterQuiz;
-
-const liEl = document.createElement('li');
-    liEl.classList.add('list-group-item');
-
-    const spanEl = document.createElement('span');
-    spanEl.classList.add('list-item-title');
-    spanEl.innerText = text;
-    spanEl.addEventListener('click', handleNoteView);
-
-    liEl.append(spanEl);
-
-    if (delBtn) {
-      const delBtnEl = document.createElement('i');
-      delBtnEl.classList.add(
-        'fas',
-        'fa-trash-alt',
-        'float-right',
-        'text-danger',
-        'delete-note'
-      );
-      delBtnEl.setAttribute("title", "Delete Note"); // added this line because I want the text box "Delete Note" to appear when the mouse cursor hovers over the delete button
-      delBtnEl.addEventListener('click', handleNoteDelete);
-      }
-
-function questionStatus(value, questionCount) {
+function appendStatus(page, value, questionCount) {
     var statusElem = document.createElement('p');
+    var statusString;
     if (value) {
-        statusElem.innerText = 'Correct';
-        statusElem.setAttribute('color', 'green');
+        statusString = questionCount + '.' + ' Correct';
+        statusElem.innerText = statusString;
+        statusElem.style.color = 'green';
     } else {
-        statusElem.innerText = 'Incorrect. You have lost 5 seconds.';
-        statusElem.setAttribute('color', 'red');
+        statusString = questionCount + '.' + ' Incorrect. You have lost 5 seconds.';
+        statusElem.innerText = statusString;
+        statusElem.style.color = 'red';
     }
     if (questionCount < questions.length) {
-        statusElem.setAttribute('margin', '20px');
+        statusElem.style.margin = '10px 20px';
+    }
+    page.appendChild(statusElem);
+    if (questionCount === questions.length) {
+        var removeStatusElem = setTimeout(function () {
+            page.removeChild(statusElem);
+        }, 3000);
     }
 }
+// source for how to set style properties in JavaScript: https://www.w3schools.com/jsref/prop_html_style.asp
+// source for removeChild(): https://www.w3schools.com/jsref/met_node_removechild.asp
 
 function displayNextQuestion(clickedBtn) {
-    
     if (questionCounter === questions.length) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
-            // var incorrectAfterQuizTimer;
-            var showTimerIncorrectAfterQuiz;
-            var hideTimerIncorrectAfterQuiz;
-            handlePopUp(incorrectAfterQuiz, showTimerIncorrectAfterQuiz, hideTimerIncorrectAfterQuiz);
-            //changeBackgroundColor(quizCompletedContainer, false);
+            appendStatus(quizCompletedContainer, false, questionCounter);
         } else {
-            // var correctAfterQuizTimer;
-            var showTimerCorrectAfterQuiz;
-            var hideTimerCorrectAfterQuiz;
-            handlePopUp(correctAfterQuiz, showTimerCorrectAfterQuiz, hideTimerCorrectAfterQuiz);
-            // changeBackgroundColor(quizCompletedContainer, true);
+            appendStatus(quizCompletedContainer, true, questionCounter);
         }
         clearInterval(quizTimer);
         changePageToQuizCompleted();
@@ -454,25 +289,9 @@ function displayNextQuestion(clickedBtn) {
     }
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
-        // correct.css("display", "none");
-        correct.style.display = "none";
-        // var incorrectTimer;
-        var showTimerIncorrect;
-        var hideTimerIncorrect;
-        handlePopUp(incorrect, showTimerIncorrect, hideTimerIncorrect);
-        // var timeLostTimer;
-        // changeBackgroundColor(quizContainer, false);
-        var showTimeLost;
-        var hideTimeLost;
-        handlePopUp(timeLost, showTimeLost, hideTimeLost);
+        appendStatus(quizContainer, false, questionCounter);
     } else {
-        // incorrect.css("display", "none");
-        incorrect.style.display = "none";
-        // var correctTimer;
-        // changeBackgroundColor(quizContainer, true);
-        var showTimerCorrect;
-        var hideTimerCorrect;
-        handlePopUp(correct, showTimerCorrect, hideTimerCorrect);
+        appendStatus(quizContainer, true, questionCounter);
     }
     if (questionCounter < questions.length) {
         questionCounter++;
