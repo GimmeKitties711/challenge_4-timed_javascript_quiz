@@ -225,6 +225,10 @@ var finalScore = document.getElementById('final-score');
 var finalScoreString;
 
 function changePageToQuizCompleted () {
+    for (i=0; i<questions.length-1; i++) {
+        quizContainer.lastChild.remove();
+    }
+    // source for how to remove all children from a parent node: https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
     homeContainer.style.display = "none";
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "block";
