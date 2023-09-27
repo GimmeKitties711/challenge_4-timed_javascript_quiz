@@ -105,6 +105,7 @@ var questionCounter = 1;
 var timeRemaining = 75;
 var timeLeft = document.getElementById('time-left');
 var pause = false;
+var timeLeftString;
 
 function quizInProgress() {
     console.log('quizInProgress was called');
@@ -116,7 +117,8 @@ function quizInProgress() {
             clearInterval(quizTimer);
             changePageToQuizCompleted();
         } else if (timeRemaining > 0) {
-            timeLeft.innerHTML = `Time: ${timeRemaining-1}`
+            timeLeftString = 'Time: ' + (timeRemaining-1);
+            timeLeft.textContent = timeLeftString;
         }
         timeRemaining--;
     }, 1000);
@@ -191,7 +193,8 @@ function changePageToHome() {
     headerHighScoresShorter.style.display = "inline-block";
     headerHighScoresLonger.style.display = "none";
     timeRemaining = 75;
-    timeLeft.textContent = `Time: ${timeRemaining}`;
+    timeLeftString = 'Time: ' + timeRemaining;
+    timeLeft.textContent = timeLeftString;
 }
 
 homeOrQuizPageBtn.addEventListener("click", function () {
@@ -211,6 +214,7 @@ var contentD = document.getElementById('content-d');
 
 var quizCompleted = document.getElementById('quiz-completed');
 var finalScore = document.getElementById('final-score');
+var finalScoreString;
 
 function changePageToQuizCompleted () {
     homeContainer.style.display = "none";
@@ -225,8 +229,10 @@ function changePageToQuizCompleted () {
     if (timeRemaining < 0) {
         timeRemaining = 0;
     }
-    timeLeft.textContent = `Time: ${timeRemaining}`;
-    finalScore.textContent = `Your final score is ${timeRemaining}.`;
+    timeLeftString = 'Time: ' + timeRemaining;
+    timeLeft.textContent = timeLeftString;
+    finalScoreString = 'Your final score is ' + timeRemaining + '.';
+    finalScore.textContent = finalScoreString;
 }
 
 // getElementById(initials).value
@@ -271,6 +277,12 @@ function changePageToQuizCompleted () {
 // var showCorrectAfterQuiz;
 // var hideCorrectAfterQuiz;
 
+// var incorrect = $('#incorrect');
+// var timeLost = $('#time-lost');
+// var correct = $('#correct');
+// var incorrectAfterQuiz = $('#incorrect-after-quiz');
+// var correctAfterQuiz = $('#correct-after-quiz');
+
 var incorrect = document.getElementById('incorrect');
 var timeLost = document.getElementById('time-lost');
 var correct = document.getElementById('correct');
@@ -293,17 +305,30 @@ var correctAfterQuiz = document.getElementById('correct-after-quiz');
 // var showTimer;
 // var hideTimer;
 
-function handlePopUp(elem) {
+function handlePopUp(elem) {//, displayTimer) {
+    // var displayTimer;
+    // clearTimeout(displayTimer);
+    // if (elem.css("display") !== "none") {
+    //     elem.hide(200); 
+    // }
+    // elem.show(400);
+    // clearTimeout(displayTimer);
+    // displayTimer = setTimeout(function () {
+    //     elem.hide(400);
+    // }, 3000);
+
     var showTimer;
     var hideTimer;
     // clearTimeout(showTimer);
     // clearTimeout(hideTimer);
     
-    
-    // source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
+    //source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
     if (elem.style.display !== "none") {
         elem.style.display = "none";
-        elem.style.animation = 'fading 2s infinite';
+        clearTimeout(showTimer);
+        showTimer = setTimeout(function () {
+            elem.style.display = "block";
+        }, 400);
     } else {
         elem.style.display = "block";
     }
@@ -319,8 +344,10 @@ function displayNextQuestion(clickedBtn) {
     if (questionCounter === questions.length) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
+            // var incorrectAfterQuizTimer;
             handlePopUp(incorrectAfterQuiz);
         } else {
+            // var correctAfterQuizTimer;
             handlePopUp(correctAfterQuiz);
         }
         clearInterval(quizTimer);
@@ -335,11 +362,16 @@ function displayNextQuestion(clickedBtn) {
     }
     if (clickedBtn !== questions[questionCounter-1].correct) {
         timeRemaining -= 5;
+        // correct.css("display", "none");
         correct.style.display = "none";
+        // var incorrectTimer;
         handlePopUp(incorrect);
+        // var timeLostTimer;
         handlePopUp(timeLost);
     } else {
+        // incorrect.css("display", "none");
         incorrect.style.display = "none";
+        // var correctTimer;
         handlePopUp(correct);
     }
     if (questionCounter < questions.length) {
@@ -354,6 +386,7 @@ var choiceD = document.getElementById('choice-d');
 
 choiceA.addEventListener("click", function() {
     displayNextQuestion("a");
+
 });
 choiceB.addEventListener("click", function() {
     displayNextQuestion("b");
