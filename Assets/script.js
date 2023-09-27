@@ -126,26 +126,30 @@ function quizInProgress() {
 
 // source for how to use setInterval() to create a countdown: https://stackoverflow.com/questions/31106189/create-a-simple-10-second-countdown
 
+var quizStarted = false;
+
 function changePageToQuiz() {
     console.log('changePageToQuiz was called');
     pause = false;
+    console.log(pause);
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
     highScoresContainer.style.display = "none";
     headerHighScoresShorter.style.display = "none";
     headerHighScoresLonger.style.display = "inline-block";
-    if (questionCounter === 1 || questionCounter === questions.length) {
+    if (!quizStarted) {
         timeRemaining = 75;
         displayInitialQuestions();
-        if (questionCounter === questions.length) {
-            questionCounter = 1;
-        }
+        questionCounter = 1;
         quizInProgress();
     }
 }
 
-startQuizBtn.addEventListener("click", changePageToQuiz);
+startQuizBtn.addEventListener("click", function() {
+    changePageToQuiz();
+    quizStarted = true;
+});
 // source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
 
 function changePageToHighScores() {
@@ -153,6 +157,7 @@ function changePageToHighScores() {
         homeOrQuizPageBtn.textContent = "Back to Quiz";
         homeOrQuizPageBtn.setAttribute("href", "#quiz-container");
         pause = true;
+        console.log(pause);
     } else {
         homeOrQuizPageBtn.textContent = "Back to Home Page";
         homeOrQuizPageBtn.setAttribute("href", "#home-container");
@@ -233,6 +238,7 @@ function changePageToQuizCompleted () {
     timeLeft.textContent = timeLeftString;
     finalScoreString = 'Your final score is ' + timeRemaining + '.';
     finalScore.textContent = finalScoreString;
+    quizStarted = false;
 }
 
 // getElementById(initials).value
@@ -305,7 +311,24 @@ var correctAfterQuiz = document.getElementById('correct-after-quiz');
 // var showTimer;
 // var hideTimer;
 
-function handlePopUp(elem) {//, displayTimer) {
+// var showTimerCorrect;
+// var hideTimerCorrect;
+// var showTimerIncorrect;
+// var hideTimerIncorrect;
+// var showTimeLost;
+// var hideTimeLost;
+// var showTimerCorrectAfterQuiz;
+// var hideTimerCorrectAfterQuiz;
+// var showTimerIncorrectAfterQuiz;
+// var hideTimerIncorrectAfterQuiz;
+
+// var showTimer1, showTimer2, showTimer3, showTimer4, showTimer5, showTimer6, showTimer7, showTimer8, showTimer9, showTimer10;
+// var showTimerArr = [showTimer1, showTimer2, showTimer3, showTimer4, showTimer5, showTimer6, showTimer7, showTimer8, showTimer9, showTimer10];
+// var hideTimer1, hideTimer2, hideTimer3, hideTimer4, hideTimer5, hideTimer6, hideTimer7, hideTimer8, hideTimer9, hideTimer10;
+// var hideTimerArr = [hideTimer1, hideTimer2, hideTimer3, hideTimer4, hideTimer5, hideTimer6, hideTimer7, hideTimer8, hideTimer9, hideTimer10];
+// var showTimerAfterQuiz, hideTimerAfterQuiz;
+
+function handlePopUp(elem, showName, hideName) {//, displayTimer) {
     // var displayTimer;
     // clearTimeout(displayTimer);
     // if (elem.css("display") !== "none") {
@@ -317,26 +340,89 @@ function handlePopUp(elem) {//, displayTimer) {
     //     elem.hide(400);
     // }, 3000);
 
-    var showTimer;
-    var hideTimer;
+    
     // clearTimeout(showTimer);
     // clearTimeout(hideTimer);
     
     //source for clearTimeout(): https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout
+    // check first elem, then loop over the rest of the elems
     if (elem.style.display !== "none") {
         elem.style.display = "none";
-        clearTimeout(showTimer);
-        showTimer = setTimeout(function () {
+        clearTimeout(showName);
+        showName = setTimeout(function () {
             elem.style.display = "block";
         }, 400);
     } else {
         elem.style.display = "block";
     }
     // clearTimeout(hideTimer);
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(function () {
+    clearTimeout(hideName);
+    hideName = setTimeout(function () {
         elem.style.display = "none";
     }, 3000);
+}
+
+
+
+// function changeBackgroundColor(elem, value) {
+//     if (value) {
+//         elem.style.backgroundColor = "lightgreen";
+//     } else {
+//         elem.style.backgroundColor = "lightcoral";
+//     }
+
+//     clearTimeout();
+//     setTimeout(function() {
+//         elem.style.backgroundColor = "white";
+//     }, 3000);
+// }
+
+// var showTimerCorrect;
+// var hideTimerCorrect;
+// var showTimerIncorrect;
+// var hideTimerIncorrect;
+// var showTimeLost;
+// var hideTimeLost;
+// var showTimerCorrectAfterQuiz;
+// var hideTimerCorrectAfterQuiz;
+// var showTimerIncorrectAfterQuiz;
+// var hideTimerIncorrectAfterQuiz;
+
+const liEl = document.createElement('li');
+    liEl.classList.add('list-group-item');
+
+    const spanEl = document.createElement('span');
+    spanEl.classList.add('list-item-title');
+    spanEl.innerText = text;
+    spanEl.addEventListener('click', handleNoteView);
+
+    liEl.append(spanEl);
+
+    if (delBtn) {
+      const delBtnEl = document.createElement('i');
+      delBtnEl.classList.add(
+        'fas',
+        'fa-trash-alt',
+        'float-right',
+        'text-danger',
+        'delete-note'
+      );
+      delBtnEl.setAttribute("title", "Delete Note"); // added this line because I want the text box "Delete Note" to appear when the mouse cursor hovers over the delete button
+      delBtnEl.addEventListener('click', handleNoteDelete);
+      }
+
+function questionStatus(value, questionCount) {
+    var statusElem = document.createElement('p');
+    if (value) {
+        statusElem.innerText = 'Correct';
+        statusElem.setAttribute('color', 'green');
+    } else {
+        statusElem.innerText = 'Incorrect. You have lost 5 seconds.';
+        statusElem.setAttribute('color', 'red');
+    }
+    if (questionCount < questions.length) {
+        statusElem.setAttribute('margin', '20px');
+    }
 }
 
 function displayNextQuestion(clickedBtn) {
@@ -345,10 +431,16 @@ function displayNextQuestion(clickedBtn) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
             // var incorrectAfterQuizTimer;
-            handlePopUp(incorrectAfterQuiz);
+            var showTimerIncorrectAfterQuiz;
+            var hideTimerIncorrectAfterQuiz;
+            handlePopUp(incorrectAfterQuiz, showTimerIncorrectAfterQuiz, hideTimerIncorrectAfterQuiz);
+            //changeBackgroundColor(quizCompletedContainer, false);
         } else {
             // var correctAfterQuizTimer;
-            handlePopUp(correctAfterQuiz);
+            var showTimerCorrectAfterQuiz;
+            var hideTimerCorrectAfterQuiz;
+            handlePopUp(correctAfterQuiz, showTimerCorrectAfterQuiz, hideTimerCorrectAfterQuiz);
+            // changeBackgroundColor(quizCompletedContainer, true);
         }
         clearInterval(quizTimer);
         changePageToQuizCompleted();
@@ -365,14 +457,22 @@ function displayNextQuestion(clickedBtn) {
         // correct.css("display", "none");
         correct.style.display = "none";
         // var incorrectTimer;
-        handlePopUp(incorrect);
+        var showTimerIncorrect;
+        var hideTimerIncorrect;
+        handlePopUp(incorrect, showTimerIncorrect, hideTimerIncorrect);
         // var timeLostTimer;
-        handlePopUp(timeLost);
+        // changeBackgroundColor(quizContainer, false);
+        var showTimeLost;
+        var hideTimeLost;
+        handlePopUp(timeLost, showTimeLost, hideTimeLost);
     } else {
         // incorrect.css("display", "none");
         incorrect.style.display = "none";
         // var correctTimer;
-        handlePopUp(correct);
+        // changeBackgroundColor(quizContainer, true);
+        var showTimerCorrect;
+        var hideTimerCorrect;
+        handlePopUp(correct, showTimerCorrect, hideTimerCorrect);
     }
     if (questionCounter < questions.length) {
         questionCounter++;
