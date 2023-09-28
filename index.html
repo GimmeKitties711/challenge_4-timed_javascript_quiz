@@ -12,7 +12,7 @@
         <h4 id="high-scores-shorter">View high scores</h4>
         <h4 id="high-scores-longer">View high scores (pauses quiz)</h4>
         <nav>
-            <div id="time-left" class="header-items-right"></div>
+            <div id="time-left" class="header-items-right">Time: 75</div>
         </nav>
     </header>
 
@@ -48,10 +48,10 @@
         <h2 id="quiz-completed">Quiz completed.</h2>
         <p id="final-score"></p>
         <div>
-            <form action="#high-scores-container" method="post">
-                <label for="initials">Enter your initials:</label>
+            <form name="submitInitials" id="submit-initials" method="post">
+                <label for="initials">Enter your initials (only your 10 highest scores will be saved):</label>
                 <input type="text" id="initials" name="initials" value="AB">
-                <input type="button" id="high-scores-btn" value="Submit">
+                <input type="submit" id="high-scores-btn" value="Submit">
             </form>
             <!-- source for how to write forms: https://www.w3schools.com/html/html_forms.asp -->
             <!-- source for how to write forms that both submit data and move to a different page: https://www.quora.com/How-can-I-create-a-HTML-button-that-submits-and-goes-to-the-next-page -->
@@ -59,8 +59,21 @@
     </div>
 
     <div id="high-scores-container">
+        <h2>Top 10 high scores:</h2>
+        <div id="top-10-scores">
+            <p id="score-1"></p>
+            <p id="score-2"></p>
+            <p id="score-3"></p>
+            <p id="score-4"></p>
+            <p id="score-5"></p>
+            <p id="score-6"></p>
+            <p id="score-7"></p>
+            <p id="score-8"></p>
+            <p id="score-9"></p>
+            <p id="score-10"></p>
+        </div>
         <button id="home-or-quiz-page-btn" href="#home-container">Back to Home Page</button>
-        <button>Clear all high scores</button>
+        <button>Clear all high scores (clears localStorage)</button>
     </div>
     <script src="./Assets/script.js"></script>
 </body>

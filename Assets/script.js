@@ -25,10 +25,10 @@ var questions = [
     },
     {
         question: "[4/10] Which of the following choices demonstrates the correct way to write a for loop?",
-        a: "for (i=0; i<array.length; i++)",
-        b: "for (i=0, i<array.length, i++)",
-        c: "for (i=0; i=array.length; i++)",
-        d: "for (i=0; i<array.length; i+1)",
+        a: "for (var i=0; i<array.length; i++)",
+        b: "for (var i=0, i<array.length, i++)",
+        c: "for (var i=0; i=array.length; i++)",
+        d: "for (var i=0; i<array.length; i+1)",
         correct: "a"
     },
     {
@@ -109,14 +109,14 @@ var timeLeftString;
 
 function quizInProgress() {
     console.log('quizInProgress was called');
-    quizTimer = setInterval(function () {
+    quizTimer = setInterval(function() {
         if (pause) {
             return;
         }
-        if (timeRemaining <= 0) {
-            clearInterval(quizTimer);
-            changePageToQuizCompleted();
-        } else if (timeRemaining > 0) {
+        // if (timeRemaining <= 0) {
+        //     clearInterval(quizTimer);
+        //     changePageToQuizCompleted();
+        if (timeRemaining > 0) {
             timeLeftString = 'Time: ' + (timeRemaining-1);
             timeLeft.textContent = timeLeftString;
             if (timeRemaining <= 10) {
@@ -124,6 +124,11 @@ function quizInProgress() {
             }
         }
         timeRemaining--;
+        if (timeRemaining <= 0) {
+            clearInterval(quizTimer);
+            changePageToQuizCompleted();
+        }
+        console.log(timeRemaining);
     }, 1000);
 }
 
@@ -171,7 +176,7 @@ function changePageToHighScores() {
     highScoresContainer.style.display = "block";
 }
 
-function hideHeader () {
+function hideHeader() {
     headerElem.style.visibility = "hidden";
 }
 
@@ -179,10 +184,155 @@ function revealHeader() {
     headerElem.style.visibility = "visible";
 }
 
-highScoresBtn.addEventListener("click", function () {
-    changePageToHighScores();
-    hideHeader()
+function validateForm() {
+    var initialsForm = document.forms["submitInitials"]["initials"].value;
+    var initialsRegex = /^[A-Z]{2}$/;
+    var match = initialsForm.match(initialsRegex);
+    if (!match) {
+      alert("Please enter valid initials, e.g. 'AB'");
+      return false;
+    }
+    return true;
+}
+// source for validating form input: https://www.w3schools.com/js/js_validation.asp
+
+// function appendHighScore() {
+
+// }
+
+// function findPlaceInArray(arr, num) {
+//     if (arr.length === 0) {
+//         arr.push()
+//     }
+// }
+
+var highScoresArr = new Array(0);
+var top10Scores = document.getElementById('top-10-scores');
+
+function addToHighScores(arr, num) {
+    arr.push(num);
+    arr.sort(function compareNums(a, b) {
+        return b-a;
+    });
+    console.log(arr);
+}
+// source for sorting an array numerically: https://stackoverflow.com/questions/1063007/how-to-sort-an-array-of-integers-correctly
+
+// function appendHighScore(init, array) {
+//     var highScoreElem;
+//     var highScoreString;
+//     if (array.length <= 10) {
+//         for (var i=0; i<array.length-1; i++) {
+//             top10Scores.lastChild.remove();
+//         }
+//         for (var i=0; i<array.length; i++) {
+//             highScoreElem = document.createElement('p');
+//             highScoreString = (i+1) + '. ' + init + ': ' + array[i];
+//             highScoreElem.innerText = highScoreString;
+//             top10Scores.append(highScoreElem);
+//         }
+//     } else {
+//         for (var i=0; i<10; i++) {
+//             top10Scores.lastChild.remove();
+//         }
+//         for (var i=0; i<10; i++) {
+//             highScoreElem = document.createElement('p');
+//             highScoreString = (i+1) + '. ' + init + ': ' + array[i];
+//             highScoreElem.innerText = highScoreString;
+//             top10Scores.append(highScoreElem);
+//         }
+//     }
+// }
+
+// for(var i=0, len=localStorage.length; i<len; i++) {
+//     var key = localStorage.key(i);
+//     var value = localStorage[key];
+//     if(value.equals(desired_value))
+//     console.log(key + " => " + value);
+// }
+
+var score1 = document.getElementById('score1');
+var score2 = document.getElementById('score2');
+var score3 = document.getElementById('score3');
+var score4 = document.getElementById('score4');
+var score5 = document.getElementById('score5');
+var score6 = document.getElementById('score6');
+var score7 = document.getElementById('score7');
+var score8 = document.getElementById('score8');
+var score9 = document.getElementById('score9');
+var score10 = document.getElementById('score10');
+// these elements are where the top 10 high scores are going to be written
+
+var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, score8, score9, score10];
+// high score elements in an array that will be used in loadHighScores()
+
+function loadHighScores(arr) {
+    var usedLength;
+    if (arr.length <= 10) {
+        usedLength = arr.length; // use all high scores
+    } else {
+        usedLength = 10; // use the top 10 scores
+    }
+    var usedKeys = new Array(0); // this array is used to keep track of the keys that have already been associated with values
+    for (var i=0; i<usedLength; i++) {
+        var desiredValue = arr[i]; // the i-th high score, whose associated initials we are trying to find
+        for (var j=0; j<localStorage.length; j++) {
+            var key = localStorage.key(j); // the j-th key
+            var value = localStorage[key]; // the value associated with the jth key
+            if ((value === desiredValue) && !usedKeys.includes(key)) { // we find the value that is equal to the high score and its key is not one that we have considered already
+                var scoreString = i + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
+                var scoreContainer = scoreContainers[i];
+                // the html element top10Scores has 10 empty containers, this variable gets the i-th one
+                scoreContainer.textContent = scoreString;
+                // set the text content of the score container to scoreString
+                usedKeys.push(key);
+                // record that we have already used this key
+            }
+            // source for how to find a key that corresponds to a value in localStorage: https://stackoverflow.com/questions/12949723/html5-localstorage-getting-key-from-value
+            // source for the includes() method: https://www.w3schools.com/jsref/jsref_includes_array.asp
+            // source for the substring() method: https://www.w3schools.com/jsref/jsref_substring.asp
+        }
+    }
+}
+
+highScoresBtn.addEventListener("click", function() {
+    if (validateForm()) {
+        var initials = document.getElementById('initials').value; // get initials from the form data submitted by the user
+        var currentDateAndTime = new Date();
+        // record date and time when initials were submitted. this is to make sure that entries can still be unique even if two high scores have the same number and initials.
+        var currentDateAndTimeString = currentDateAndTime.toString();
+        // convert the date and time into a string so it can be used in the localStorage key
+        var localStorageKeyString = initials + ' - ' + currentDateAndTimeString;
+        // example: AB - Wed Sep 27 2023 17:14:28 GMT-0700 (Pacific Daylight Time)
+        localStorage.setItem(localStorageKeyString, timeRemaining); // timeRemaining at the end of the quiz is the number used as the score, which is stored as the localStorage value
+        changePageToHighScores(); // change the page to highScoresContainer
+        hideHeader(); // conceal the header since it has a button whose text is 'View high scores'
+        addToHighScores(highScoresArr, timeRemaining);
+        // add the newest score to the array of high scores
+        loadHighScores(highScoresArr); // use the array of high scores to fill in the score containers
+    }
 });
+
+/* <form name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
+Name: <input type="text" name="fname">
+<input type="submit" value="Submit">
+</form> */
+
+// const paragraph = 'the quick brown fox jumps over the lazy dog. it barked.';
+// const regex = /[A-Z]/g;
+// const found = paragraph.match(regex);
+
+// console.log(found);
+// // Expected output: Array ["T", "I"]
+
+// source for validating form input: https://www.w3schools.com/js/js_validation.asp
+
+var submitInitialsForm = document.getElementById('submit-initials');
+
+submitInitialsForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // prevents the form from automatically submitting
+});
+
 headerHighScoresShorter.addEventListener("click", function() {
     changePageToHighScores();
     hideHeader()
@@ -203,9 +353,10 @@ function changePageToHome() {
     timeRemaining = 75;
     timeLeftString = 'Time: ' + timeRemaining;
     timeLeft.textContent = timeLeftString;
+    timeLeft.style.color = "black";
 }
 
-homeOrQuizPageBtn.addEventListener("click", function () {
+homeOrQuizPageBtn.addEventListener("click", function() {
     if (!pause) {
         changePageToHome();
     } else {
@@ -224,11 +375,12 @@ var quizCompleted = document.getElementById('quiz-completed');
 var finalScore = document.getElementById('final-score');
 var finalScoreString;
 
-function changePageToQuizCompleted () {
+function changePageToQuizCompleted() {
     for (i=0; i<questions.length-1; i++) {
         quizContainer.lastChild.remove();
     }
     // source for how to remove all children from a parent node: https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
+    // (didn't use this exactly but it helped me write my code)
     homeContainer.style.display = "none";
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "block";
@@ -274,32 +426,41 @@ function appendStatus(page, value, questionCount) {
 // source for removeChild(): https://www.w3schools.com/jsref/met_node_removechild.asp
 
 function displayNextQuestion(clickedBtn) {
-    if (questionCounter === questions.length) {
-        if (clickedBtn !== questions[questionCounter-1].correct) {
-            timeRemaining -= 5;
-            appendStatus(quizCompletedContainer, false, questionCounter);
-        } else {
-            appendStatus(quizCompletedContainer, true, questionCounter);
-        }
-        clearInterval(quizTimer);
-        changePageToQuizCompleted();
-    }
     if (questionCounter < questions.length) {
         currentQuestion.textContent = questions[questionCounter].question;
         contentA.textContent = questions[questionCounter].a;
         contentB.textContent = questions[questionCounter].b;
         contentC.textContent = questions[questionCounter].c;
         contentD.textContent = questions[questionCounter].d;
+        if (clickedBtn !== questions[questionCounter-1].correct) {
+            timeRemaining -= 5;
+            // console.log(timeRemaining);
+            appendStatus(quizContainer, false, questionCounter);
+        } else {
+            // console.log(timeRemaining);
+            appendStatus(quizContainer, true, questionCounter);
+        }
+        // questionCounter++;
+        // console.log(questionCounter);
     }
-    if (clickedBtn !== questions[questionCounter-1].correct) {
-        timeRemaining -= 5;
-        appendStatus(quizContainer, false, questionCounter);
-    } else {
-        appendStatus(quizContainer, true, questionCounter);
+    if (questionCounter === questions.length) {
+        if (clickedBtn !== questions[questionCounter-1].correct) {
+            // console.log(timeRemaining);
+            timeRemaining -= 5;
+            appendStatus(quizCompletedContainer, false, questionCounter);
+        } else {
+            // console.log(timeRemaining);
+            appendStatus(quizCompletedContainer, true, questionCounter);
+        }
+        // questionCounter++;
+        // console.log(questionCounter);
     }
-    if (questionCounter < questions.length) {
-        questionCounter++;
+    questionCounter++;
+    if (questionCounter > questions.length) {
+        clearInterval(quizTimer);
+        changePageToQuizCompleted();
     }
+    console.log(questionCounter);
 }
 
 var choiceA = document.getElementById('choice-a');
