@@ -108,7 +108,7 @@ var pause = false;
 var timeLeftString;
 
 function quizInProgress() {
-    console.log('quizInProgress was called');
+    // console.log('quizInProgress was called');
     quizTimer = setInterval(function() {
         if (pause) {
             return;
@@ -128,7 +128,7 @@ function quizInProgress() {
             clearInterval(quizTimer);
             changePageToQuizCompleted();
         }
-        console.log(timeRemaining);
+        // console.log(timeRemaining);
     }, 1000);
 }
 
@@ -137,7 +137,7 @@ function quizInProgress() {
 var quizStarted = false;
 
 function changePageToQuiz() {
-    console.log('changePageToQuiz was called');
+    // console.log('changePageToQuiz was called');
     pause = false;
     console.log(pause);
     homeContainer.style.display = "none";
@@ -206,16 +206,16 @@ function validateForm() {
 //     }
 // }
 
-var highScoresArr = new Array(0);
-var top10Scores = document.getElementById('top-10-scores');
+// var highScoresArr = new Array(0);
+// var top10Scores = document.getElementById('top-10-scores');
 
-function addToHighScores(arr, num) {
-    arr.push(num);
-    arr.sort(function compareNums(a, b) {
-        return b-a;
-    });
-    console.log(arr);
-}
+// function addToHighScores(arr, num) {
+//     arr.push(num);
+//     arr.sort(function compareNums(a, b) {
+//         return b-a;
+//     });
+//     console.log(arr);
+// }
 // source for sorting an array numerically: https://stackoverflow.com/questions/1063007/how-to-sort-an-array-of-integers-correctly
 
 // function appendHighScore(init, array) {
@@ -251,16 +251,16 @@ function addToHighScores(arr, num) {
 //     console.log(key + " => " + value);
 // }
 
-var score1 = document.getElementById('score1');
-var score2 = document.getElementById('score2');
-var score3 = document.getElementById('score3');
-var score4 = document.getElementById('score4');
-var score5 = document.getElementById('score5');
-var score6 = document.getElementById('score6');
-var score7 = document.getElementById('score7');
-var score8 = document.getElementById('score8');
-var score9 = document.getElementById('score9');
-var score10 = document.getElementById('score10');
+var score1 = document.getElementById('score-1');
+var score2 = document.getElementById('score-2');
+var score3 = document.getElementById('score-3');
+var score4 = document.getElementById('score-4');
+var score5 = document.getElementById('score-5');
+var score6 = document.getElementById('score-6');
+var score7 = document.getElementById('score-7');
+var score8 = document.getElementById('score-8');
+var score9 = document.getElementById('score-9');
+var score10 = document.getElementById('score-10');
 // these elements are where the top 10 high scores are going to be written
 
 var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, score8, score9, score10];
@@ -280,7 +280,8 @@ function loadHighScores(arr) {
             var key = localStorage.key(j); // the j-th key
             var value = localStorage[key]; // the value associated with the jth key
             if ((value === desiredValue) && !usedKeys.includes(key)) { // we find the value that is equal to the high score and its key is not one that we have considered already
-                var scoreString = i + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
+                var scoreString = (i+1) + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
+                console.log(scoreString);
                 var scoreContainer = scoreContainers[i];
                 // the html element top10Scores has 10 empty containers, this variable gets the i-th one
                 scoreContainer.textContent = scoreString;
@@ -302,17 +303,82 @@ highScoresBtn.addEventListener("click", function() {
         // record date and time when initials were submitted. this is to make sure that entries can still be unique even if two high scores have the same number and initials.
         var currentDateAndTimeString = currentDateAndTime.toString();
         // convert the date and time into a string so it can be used in the localStorage key
-        var localStorageKeyString = initials + ' - ' + currentDateAndTimeString;
-        // example: AB - Wed Sep 27 2023 17:14:28 GMT-0700 (Pacific Daylight Time)
+        var currentDateAndTimeStringTrimmed = currentDateAndTimeString.substring(0, 33); // cut out the part that says '(Pacific Daylight Time)' because time zone name can vary and have inconsistent character lengths
+        var localStorageKeyString = initials + ' - ' + currentDateAndTimeStringTrimmed;
+        // example: AB - Wed Sep 27 2023 17:14:28 GMT-0700
         localStorage.setItem(localStorageKeyString, timeRemaining); // timeRemaining at the end of the quiz is the number used as the score, which is stored as the localStorage value
         changePageToHighScores(); // change the page to highScoresContainer
         hideHeader(); // conceal the header since it has a button whose text is 'View high scores'
-        addToHighScores(highScoresArr, timeRemaining);
+        // addToHighScores(highScoresArr, timeRemaining);
         // add the newest score to the array of high scores
-        loadHighScores(highScoresArr); // use the array of high scores to fill in the score containers
+        loadHighScores(getAllHighScoresFromLocalStorage()); // use the array of high scores to fill in the score containers
     }
 });
 
+console.log(localStorage);
+
+function checkKeyFormat(key) {
+    var keyRegex = /^[A-Za-z]{2}\s-\s[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\s[A-Za-z]{3}-\d{4}$/;
+    // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO%20%20%5Borg.example.Class%5D%3A%20This%20is%20a%20%23simple%20%23logline%20containing%20a%20%27value%27.&flags=i
+    var match = key.match(keyRegex);
+    if (!match) {
+        return false;
+    } else {
+        return true;
+    }
+    // [A-Za-z][A-Za-z] \s-\s [A-Za-z][A-Za-z][A-Za-z] \s [A-Za-z][A-Za-z][A-Za-z] \s\d\d \s\d\d\d\d \s\d\d: \d\d: \d\d\s [A-Za-z][A-Za-z][A-Za-z] -\d\d\d\d
+}
+
+function getAllHighScoresFromLocalStorage() {
+    var values = [];
+    keys = Object.keys(localStorage);
+
+    for (var i=0; i<keys.length; i++) {
+        if (!isNaN(parseInt(localStorage.getItem(keys[i]))) && localStorage.getItem(keys[i]).length >= 1 && localStorage.getItem(keys[i]).length <= 2 && checkKeyFormat(keys[i])) {
+            values.push( localStorage.getItem(keys[i]) );
+        }
+    }
+
+    values.sort(function greatestToLeast(a, b) {
+        return b-a;
+    })
+
+    return values;
+}
+// source for this function: https://stackoverflow.com/questions/17745292/how-to-retrieve-all-localstorage-items-without-knowing-the-keys-in-advance
+
+document.addEventListener("DOMContentLoaded", loadHighScores(getAllHighScoresFromLocalStorage()));
+// the top 10 high scores are loaded into the high scores container as soon as the page is loaded, without waiting for stylesheets and images, source: https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
+
+// function getAllHighScoresFromLocalStorage() {
+//     var values = [];
+//     keys = Object.keys(localStorage);
+
+//     for (var i=0; i<keys.length; i++) {
+//         if (!isNaN(parseInt(localStorage.getItem(keys[i]))) && localStorage.getItem(keys[i]).length >= 1 && localStorage.getItem(keys[i]).length <= 2 && checkKeyFormat(keys[i])) {
+//             values.push( localStorage.getItem(keys[i]) );
+//         }
+//     }
+
+//     values.sort(function greatestToLeast(a, b) {
+//         return b-a;
+//     })
+
+//     return values;
+// }
+
+// console.log(getAllHighScoresFromLocalStorage())
+
+// console.log(allStorageValues());
+// var arrr = allStorageValues();
+// console.log(allStorageValues().sort(function greatestToLeast(a, b) {
+//     return b-a;
+// }));
+// console.log(typeof arrr[18]);
+// for (var i=0; i<arrr.length; i++) {
+//     arrr[i] = parseInt(arrr[i]);
+// }
+// console.log(typeof arrr[18]);
 /* <form name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
 Name: <input type="text" name="fname">
 <input type="submit" value="Submit">
@@ -460,7 +526,7 @@ function displayNextQuestion(clickedBtn) {
         clearInterval(quizTimer);
         changePageToQuizCompleted();
     }
-    console.log(questionCounter);
+    // console.log(questionCounter);
 }
 
 var choiceA = document.getElementById('choice-a');
