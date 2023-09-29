@@ -108,14 +108,10 @@ var pause = false;
 var timeLeftString;
 
 function quizInProgress() {
-    // console.log('quizInProgress was called');
     quizTimer = setInterval(function() {
         if (pause) {
             return;
         }
-        // if (timeRemaining <= 0) {
-        //     clearInterval(quizTimer);
-        //     changePageToQuizCompleted();
         if (timeRemaining > 0) {
             timeLeftString = 'Time: ' + (timeRemaining-1);
             timeLeft.textContent = timeLeftString;
@@ -128,7 +124,6 @@ function quizInProgress() {
             clearInterval(quizTimer);
             changePageToQuizCompleted();
         }
-        // console.log(timeRemaining);
     }, 1000);
 }
 
@@ -137,9 +132,7 @@ function quizInProgress() {
 var quizStarted = false;
 
 function changePageToQuiz() {
-    // console.log('changePageToQuiz was called');
     pause = false;
-    console.log(pause);
     homeContainer.style.display = "none";
     quizContainer.style.display = "block"
     quizCompletedContainer.style.display = "none";
@@ -165,7 +158,6 @@ function changePageToHighScores() {
         homeOrQuizPageBtn.textContent = "Back to Quiz";
         homeOrQuizPageBtn.setAttribute("href", "#quiz-container");
         pause = true;
-        console.log(pause);
     } else {
         homeOrQuizPageBtn.textContent = "Back to Home Page";
         homeOrQuizPageBtn.setAttribute("href", "#home-container");
@@ -176,12 +168,34 @@ function changePageToHighScores() {
     highScoresContainer.style.display = "block";
 }
 
+var noButton = document.getElementById('no-button');
+noButton.addEventListener("click", changePageToHighScores);
+
 function hideHeader() {
     headerElem.style.visibility = "hidden";
 }
 
 function revealHeader() {
     headerElem.style.visibility = "visible";
+}
+
+var saveQuestion = document.getElementById('save-question');
+var options = document.getElementById('options');
+var submitScore = document.getElementById('submit-score');
+
+function revealSubmissionForm() {
+    saveQuestion.style.display = "none";
+    options.style.display = "none";
+    submitScore.style.display = "block";
+}
+
+var yesButton = document.getElementById('yes-button');
+yesButton.addEventListener("click", revealSubmissionForm);
+
+function hideSubmissionForm() {
+    saveQuestion.style.display = "block";
+    options.style.display = "block";
+    submitScore.style.display = "none";
 }
 
 function validateForm() {
@@ -195,61 +209,6 @@ function validateForm() {
     return true;
 }
 // source for validating form input: https://www.w3schools.com/js/js_validation.asp
-
-// function appendHighScore() {
-
-// }
-
-// function findPlaceInArray(arr, num) {
-//     if (arr.length === 0) {
-//         arr.push()
-//     }
-// }
-
-// var highScoresArr = new Array(0);
-// var top10Scores = document.getElementById('top-10-scores');
-
-// function addToHighScores(arr, num) {
-//     arr.push(num);
-//     arr.sort(function compareNums(a, b) {
-//         return b-a;
-//     });
-//     console.log(arr);
-// }
-// source for sorting an array numerically: https://stackoverflow.com/questions/1063007/how-to-sort-an-array-of-integers-correctly
-
-// function appendHighScore(init, array) {
-//     var highScoreElem;
-//     var highScoreString;
-//     if (array.length <= 10) {
-//         for (var i=0; i<array.length-1; i++) {
-//             top10Scores.lastChild.remove();
-//         }
-//         for (var i=0; i<array.length; i++) {
-//             highScoreElem = document.createElement('p');
-//             highScoreString = (i+1) + '. ' + init + ': ' + array[i];
-//             highScoreElem.innerText = highScoreString;
-//             top10Scores.append(highScoreElem);
-//         }
-//     } else {
-//         for (var i=0; i<10; i++) {
-//             top10Scores.lastChild.remove();
-//         }
-//         for (var i=0; i<10; i++) {
-//             highScoreElem = document.createElement('p');
-//             highScoreString = (i+1) + '. ' + init + ': ' + array[i];
-//             highScoreElem.innerText = highScoreString;
-//             top10Scores.append(highScoreElem);
-//         }
-//     }
-// }
-
-// for(var i=0, len=localStorage.length; i<len; i++) {
-//     var key = localStorage.key(i);
-//     var value = localStorage[key];
-//     if(value.equals(desired_value))
-//     console.log(key + " => " + value);
-// }
 
 var score1 = document.getElementById('score-1');
 var score2 = document.getElementById('score-2');
@@ -266,6 +225,18 @@ var score10 = document.getElementById('score-10');
 var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, score8, score9, score10];
 // high score elements in an array that will be used in loadHighScores()
 
+function checkKeyFormat(key) {
+    var keyRegex = /^[A-Za-z]{2}\s-\s[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\s[A-Za-z]{3}-\d{4}$/;
+    // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO%20%20%5Borg.example.Class%5D%3A%20This%20is%20a%20%23simple%20%23logline%20containing%20a%20%27value%27.&flags=i
+    // it is meant to fit the format of strings such as AB - Thu Sep 28 2023 14:33:55 GMT-0700
+    var match = key.match(keyRegex);
+    if (!match) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 function loadHighScores(arr) {
     var usedLength;
     if (arr.length <= 10) {
@@ -276,24 +247,48 @@ function loadHighScores(arr) {
     var usedKeys = new Array(0); // this array is used to keep track of the keys that have already been associated with values
     for (var i=0; i<usedLength; i++) {
         var desiredValue = arr[i]; // the i-th high score, whose associated initials we are trying to find
+        var keyHasBeenFound = false;
         for (var j=0; j<localStorage.length; j++) {
             var key = localStorage.key(j); // the j-th key
             var value = localStorage[key]; // the value associated with the jth key
-            if ((value === desiredValue) && !usedKeys.includes(key)) { // we find the value that is equal to the high score and its key is not one that we have considered already
-                var scoreString = (i+1) + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
-                console.log(scoreString);
-                var scoreContainer = scoreContainers[i];
-                // the html element top10Scores has 10 empty containers, this variable gets the i-th one
-                scoreContainer.textContent = scoreString;
-                // set the text content of the score container to scoreString
-                usedKeys.push(key);
-                // record that we have already used this key
+            if ((value === desiredValue) && checkKeyFormat(key)) { // we find the value that is equal to the high score and its key is not one that we have considered already
+                if (!usedKeys.includes(key)) {
+                    var scoreString = (i+1) + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
+                    // console.log(scoreString);
+                    var scoreContainer = scoreContainers[i];
+                    // the html element top10Scores has 10 empty containers, this variable gets the i-th one
+                    scoreContainer.textContent = scoreString;
+                    // set the text content of the score container to scoreString
+                    usedKeys.push(key); // make sure that a key does not get used twice for the same value (record one key for every desiredValue)
+                    keyHasBeenFound = true;
+                }
+            }
+            if (keyHasBeenFound) {
+                break;
             }
             // source for how to find a key that corresponds to a value in localStorage: https://stackoverflow.com/questions/12949723/html5-localstorage-getting-key-from-value
             // source for the includes() method: https://www.w3schools.com/jsref/jsref_includes_array.asp
             // source for the substring() method: https://www.w3schools.com/jsref/jsref_substring.asp
+            
         }
     }
+}
+
+function getAllHighScores() {
+    var values = [];
+    var keysToGet = Object.keys(localStorage);
+
+    for (var i=0; i<keysToGet.length; i++) {
+        if (!isNaN(parseInt(localStorage.getItem(keysToGet[i]))) && localStorage.getItem(keysToGet[i]).length >= 1 && localStorage.getItem(keysToGet[i]).length <= 2 && checkKeyFormat(keysToGet[i])) {
+            values.push( localStorage.getItem(keysToGet[i]) );
+        }
+    }
+
+    values.sort(function greatestToLeast(a, b) {
+        return b-a;
+    })
+
+    return values;
 }
 
 highScoresBtn.addEventListener("click", function() {
@@ -309,95 +304,38 @@ highScoresBtn.addEventListener("click", function() {
         localStorage.setItem(localStorageKeyString, timeRemaining); // timeRemaining at the end of the quiz is the number used as the score, which is stored as the localStorage value
         changePageToHighScores(); // change the page to highScoresContainer
         hideHeader(); // conceal the header since it has a button whose text is 'View high scores'
-        // addToHighScores(highScoresArr, timeRemaining);
-        // add the newest score to the array of high scores
-        loadHighScores(getAllHighScoresFromLocalStorage()); // use the array of high scores to fill in the score containers
+        loadHighScores(getAllHighScores()); // use the high scores from localStorage to fill in the score containers
     }
 });
 
-console.log(localStorage);
+// source for this function: https://stackoverflow.com/questions/17745292/how-to-retrieve-all-localstorage-items-without-knowing-the-keys-in-advance
 
-function checkKeyFormat(key) {
-    var keyRegex = /^[A-Za-z]{2}\s-\s[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\s[A-Za-z]{3}-\d{4}$/;
-    // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO%20%20%5Borg.example.Class%5D%3A%20This%20is%20a%20%23simple%20%23logline%20containing%20a%20%27value%27.&flags=i
-    var match = key.match(keyRegex);
-    if (!match) {
-        return false;
-    } else {
-        return true;
-    }
-    // [A-Za-z][A-Za-z] \s-\s [A-Za-z][A-Za-z][A-Za-z] \s [A-Za-z][A-Za-z][A-Za-z] \s\d\d \s\d\d\d\d \s\d\d: \d\d: \d\d\s [A-Za-z][A-Za-z][A-Za-z] -\d\d\d\d
-}
+document.addEventListener("DOMContentLoaded", loadHighScores(getAllHighScores()));
+// the top 10 high scores are loaded into the high scores container as soon as the page is loaded, without waiting for stylesheets and images, source: https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
 
-function getAllHighScoresFromLocalStorage() {
-    var values = [];
-    keys = Object.keys(localStorage);
+function removeAllHighScores() {
+    var keysToRemove = Object.keys(localStorage);
 
-    for (var i=0; i<keys.length; i++) {
-        if (!isNaN(parseInt(localStorage.getItem(keys[i]))) && localStorage.getItem(keys[i]).length >= 1 && localStorage.getItem(keys[i]).length <= 2 && checkKeyFormat(keys[i])) {
-            values.push( localStorage.getItem(keys[i]) );
+    for (var i=0; i<keysToRemove.length; i++) {
+        if (checkKeyFormat(keysToRemove[i])) {
+            localStorage.removeItem(keysToRemove[i]);
         }
     }
 
-    values.sort(function greatestToLeast(a, b) {
-        return b-a;
-    })
-
-    return values;
+    for (var j=0; j<scoreContainers.length; j++) {
+        scoreContainers[j].textContent = '';
+    }
 }
-// source for this function: https://stackoverflow.com/questions/17745292/how-to-retrieve-all-localstorage-items-without-knowing-the-keys-in-advance
 
-document.addEventListener("DOMContentLoaded", loadHighScores(getAllHighScoresFromLocalStorage()));
-// the top 10 high scores are loaded into the high scores container as soon as the page is loaded, without waiting for stylesheets and images, source: https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
-
-// function getAllHighScoresFromLocalStorage() {
-//     var values = [];
-//     keys = Object.keys(localStorage);
-
-//     for (var i=0; i<keys.length; i++) {
-//         if (!isNaN(parseInt(localStorage.getItem(keys[i]))) && localStorage.getItem(keys[i]).length >= 1 && localStorage.getItem(keys[i]).length <= 2 && checkKeyFormat(keys[i])) {
-//             values.push( localStorage.getItem(keys[i]) );
-//         }
-//     }
-
-//     values.sort(function greatestToLeast(a, b) {
-//         return b-a;
-//     })
-
-//     return values;
-// }
-
-// console.log(getAllHighScoresFromLocalStorage())
-
-// console.log(allStorageValues());
-// var arrr = allStorageValues();
-// console.log(allStorageValues().sort(function greatestToLeast(a, b) {
-//     return b-a;
-// }));
-// console.log(typeof arrr[18]);
-// for (var i=0; i<arrr.length; i++) {
-//     arrr[i] = parseInt(arrr[i]);
-// }
-// console.log(typeof arrr[18]);
-/* <form name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
-Name: <input type="text" name="fname">
-<input type="submit" value="Submit">
-</form> */
-
-// const paragraph = 'the quick brown fox jumps over the lazy dog. it barked.';
-// const regex = /[A-Z]/g;
-// const found = paragraph.match(regex);
-
-// console.log(found);
-// // Expected output: Array ["T", "I"]
-
-// source for validating form input: https://www.w3schools.com/js/js_validation.asp
+var clearHighScores = document.getElementById('clear-high-scores');
+clearHighScores.addEventListener("click", removeAllHighScores);
 
 var submitInitialsForm = document.getElementById('submit-initials');
 
 submitInitialsForm.addEventListener("submit", function(event) {
     event.preventDefault(); // prevents the form from automatically submitting
 });
+// source for how to handle forms: https://www.youtube.com/watch?v=S944-epyYuI&t=131s
 
 headerHighScoresShorter.addEventListener("click", function() {
     changePageToHighScores();
@@ -410,6 +348,7 @@ headerHighScoresLonger.addEventListener("click", function() {
 });
 
 function changePageToHome() {
+    hideSubmissionForm();
     homeContainer.style.display = "block";
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "none";
@@ -500,33 +439,24 @@ function displayNextQuestion(clickedBtn) {
         contentD.textContent = questions[questionCounter].d;
         if (clickedBtn !== questions[questionCounter-1].correct) {
             timeRemaining -= 5;
-            // console.log(timeRemaining);
             appendStatus(quizContainer, false, questionCounter);
         } else {
-            // console.log(timeRemaining);
             appendStatus(quizContainer, true, questionCounter);
         }
-        // questionCounter++;
-        // console.log(questionCounter);
     }
     if (questionCounter === questions.length) {
         if (clickedBtn !== questions[questionCounter-1].correct) {
-            // console.log(timeRemaining);
             timeRemaining -= 5;
             appendStatus(quizCompletedContainer, false, questionCounter);
         } else {
-            // console.log(timeRemaining);
             appendStatus(quizCompletedContainer, true, questionCounter);
         }
-        // questionCounter++;
-        // console.log(questionCounter);
     }
     questionCounter++;
     if (questionCounter > questions.length) {
         clearInterval(quizTimer);
         changePageToQuizCompleted();
     }
-    // console.log(questionCounter);
 }
 
 var choiceA = document.getElementById('choice-a');
@@ -536,7 +466,6 @@ var choiceD = document.getElementById('choice-d');
 
 choiceA.addEventListener("click", function() {
     displayNextQuestion("a");
-
 });
 choiceB.addEventListener("click", function() {
     displayNextQuestion("b");

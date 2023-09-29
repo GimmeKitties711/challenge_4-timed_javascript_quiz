@@ -47,9 +47,14 @@
     <div id="quiz-completed-container">
         <h2 id="quiz-completed">Quiz completed.</h2>
         <p id="final-score"></p>
-        <div>
+        <h4 id="save-question">Would you like to save this score?</h4>
+        <div id="options">
+            <button id="yes-button">Yes</button>
+            <button id="no-button">No</button>
+        </div>
+        <div id="submit-score">
             <form name="submitInitials" id="submit-initials" method="post">
-                <label for="initials">Enter your initials (only your 10 highest scores will be saved):</label>
+                <label for="initials">Enter your initials (only your 10 highest scores will be saved):</label><br><br>
                 <input type="text" id="initials" name="initials" value="AB">
                 <input type="submit" id="high-scores-btn" value="Submit">
             </form>
@@ -73,7 +78,7 @@
             <p id="score-10"></p>
         </div>
         <button id="home-or-quiz-page-btn" href="#home-container">Back to Home Page</button>
-        <button>Clear all high scores (clears localStorage)</button>
+        <button id="clear-high-scores">Clear all high scores from localStorage</button>
     </div>
     <script src="./Assets/script.js"></script>
 </body>

@@ -87,6 +87,10 @@ button:hover {
     margin-left: 20px;
 }
 
+#submit-score {
+    display: none;
+}
+
 #high-scores-container {
     display: none;
     margin-left: 20px;
