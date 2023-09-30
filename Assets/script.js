@@ -175,11 +175,13 @@ var noButton = document.getElementById('no-button');
 noButton.addEventListener("click", changePageToHighScores);
 // if the user decides not to submit their latest score, take them straight to the high scores page
 
-function hideHeader() {
+function hideHeader(inProgress) {
     headerHighScoresShorter.style.visibility = "hidden";
     headerHighScoresLonger.style.visibility = "hidden";
-    timeLeft.style.visibility = "hidden";
-    // hide all header components but not the header itself - hiding the header will also hide its background color
+    if (!inProgress) {
+        timeLeft.style.visibility = "hidden";
+    } // keep the time visible while the quiz is in progress
+    // hide all header components but not the header itself, as that would also hide its background color
     // this function is used when viewing the high scores page because the header contains the text 'View high scores'
 }
 
@@ -209,7 +211,7 @@ function hideSubmissionForm() {
     saveQuestion.style.display = "block";
     options.style.display = "block";
     submitScore.style.display = "none";
-    // this function is used when the user returns to the home page. after they take the quiz again, they will be presented with the options 'Would you like to save this score? Yes/No'.
+    // this function is called when the user returns to the home page. after they take the quiz again, they will be presented with the options 'Would you like to save this score? Yes/No'.
 }
 
 function validateForm() {
@@ -223,6 +225,7 @@ function validateForm() {
     return true;
 }
 // source for validating form input: https://www.w3schools.com/js/js_validation.asp
+// source for how to use match() to check if a string matches a regex: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
 
 var score1 = document.getElementById('score-1');
 var score2 = document.getElementById('score-2');
@@ -234,7 +237,7 @@ var score7 = document.getElementById('score-7');
 var score8 = document.getElementById('score-8');
 var score9 = document.getElementById('score-9');
 var score10 = document.getElementById('score-10');
-// the top 10 high scores are going to be written in these elements
+// the top 10 high scores will be written in these elements
 
 var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, score8, score9, score10];
 // this array will be used in loadHighScores()
@@ -246,7 +249,7 @@ function checkKeyFormat(key) {
     var match = key.match(keyRegex);
     if (!match) { // if the localStorage key does not match keyRegex
         return false;
-    } else {
+    } else { // if the localStorage key matches keyRegex
         return true;
     }
 }
@@ -264,7 +267,7 @@ function loadHighScores(arr) {
         var keyHasBeenFound = false;
         for (var j=0; j<localStorage.length; j++) {
             var key = localStorage.key(j); // the j-th key
-            var value = localStorage[key]; // the value associated with the jth key
+            var value = localStorage[key]; // the value associated with the j-th key
             if ((value === desiredValue) && checkKeyFormat(key)) { // we find a value that is equal to the high score and its key matches the format specified by keyRegex
                 if (!usedKeys.includes(key)) { // if we have not used this key already
                     var scoreString = (i+1) + '. ' + key.substring(0, 2) + ': ' + value; // example: '1. AB: 55'
@@ -272,7 +275,7 @@ function loadHighScores(arr) {
                     // the html element #top-10-scores has 10 empty containers, this variable gets the i-th one
                     scoreContainer.textContent = scoreString;
                     // set the text content of the score container to scoreString
-                    usedKeys.push(key); // make sure that a key does not get used twice for the same value (record one key for every desiredValue)
+                    usedKeys.push(key); // make sure that a key does not get used twice for the same value
                     keyHasBeenFound = true;
                 }
             }
@@ -318,20 +321,20 @@ highScoresBtn.addEventListener("click", function() {
         // example: AB - Wed Sep 27 2023 17:14:28 GMT-0700
         localStorage.setItem(localStorageKeyString, timeRemaining); // the time left at the end of the quiz is used as the score, which is stored as the localStorage value
         changePageToHighScores(); // change the page component to highScoresContainer
-        hideHeader(); // conceal the header since it contains the text is 'View high scores'
+        hideHeader(quizStarted); // conceal the header since it contains the text 'View high scores'
         loadHighScores(getAllHighScores()); // use the high scores from localStorage to fill in the score containers
     }
 });
 
 document.addEventListener("DOMContentLoaded", loadHighScores(getAllHighScores()));
-// the top 10 high scores are loaded into the high scores container as soon as the page is loaded, without waiting for stylesheets and images, source: https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
+// the top 10 high scores are loaded into highScoresContainer as soon as the page is loaded, without waiting for stylesheets and images, source: https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
 
 function removeAllHighScores() {
     var keysToRemove = Object.keys(localStorage);
 
     for (var i=0; i<keysToRemove.length; i++) {
         if (checkKeyFormat(keysToRemove[i])) {
-            localStorage.removeItem(keysToRemove[i]); // source for localStorage.removeItem(): https://www.w3schools.com/jsref/met_storage_removeitem.asp
+            localStorage.removeItem(keysToRemove[i]); // source for the localStorage.removeItem() method: https://www.w3schools.com/jsref/met_storage_removeitem.asp
         }
     }
 
@@ -346,18 +349,18 @@ clearHighScores.addEventListener("click", removeAllHighScores);
 var submitInitialsForm = document.getElementById('submit-initials');
 
 submitInitialsForm.addEventListener("submit", function(event) {
-    event.preventDefault(); // prevents the form from automatically submitting
+    event.preventDefault(); // prevent the form from automatically submitting
 });
 // source for how to handle forms: https://www.youtube.com/watch?v=S944-epyYuI&t=131s
 
 headerHighScoresShorter.addEventListener("click", function() {
     changePageToHighScores();
-    hideHeader()
+    hideHeader(quizStarted);
 });
 
 headerHighScoresLonger.addEventListener("click", function() {
     changePageToHighScores();
-    hideHeader()
+    hideHeader(quizStarted);
 });
 
 function changePageToHome() {
@@ -377,13 +380,13 @@ function changePageToHome() {
     timeLeftString = 'Time: ' + timeRemaining;
     timeLeft.textContent = timeLeftString;
     timeLeft.style.color = "black";
-    // reset timeRemaining and change the color of 'Time: 75' to black if it was red at the end of the quiz
+    // reset timeRemaining and change the color of 'Time: 75' to black in case it was red at the end of the quiz
 }
 
 homeOrQuizPageBtn.addEventListener("click", function() {
-    if (!pause) { // if the high scores page was reached while the quiz was not in progress
+    if (!pause) { // if the high scores page is reached while the quiz is not in progress
         changePageToHome();
-    } else { // if the high scores page was reached while the quiz was in progress
+    } else { // if the high scores page is reached while the quiz is in progress
         changePageToQuiz();
     }
     revealHeader()
@@ -423,7 +426,7 @@ function changePageToQuizCompleted() {
     if (questionCounter <= questions.length) { // if the user did not answer all of the questions
         quizCompleted.textContent = "Quiz partially completed.";
     }
-    if (timeRemaining < 0) { // if timeRemaining < 5 and the user answers the last question incorrectly (-5 sec)
+    if (timeRemaining < 0) { // if timeRemaining < 5 and the user's last answer is incorrect (-5 sec)
         timeRemaining = 0;
     }
     timeLeftString = 'Time: ' + timeRemaining;
@@ -436,12 +439,12 @@ function changePageToQuizCompleted() {
 function appendStatus(page, value, questionCount) {
     var statusElem = document.createElement('p');
     var statusString;
-    if (value) { // if the user answered the question correctly
+    if (value) { // if the user answers the question correctly
         statusString = questionCount + '.' + ' Correct'; // example: '3. Correct'
         statusElem.innerText = statusString;
         statusElem.style.color = 'darkgreen';
         statusElem.style.fontWeight = '700'; // make the status easy to read
-    } else {
+    } else { // if the user answers the question incorrectly
         statusString = questionCount + '.' + ' Incorrect. You have lost 5 seconds.'; // example: '5. Incorrect. You have lost 5 seconds.'
         statusElem.innerText = statusString;
         statusElem.style.color = 'darkred';
@@ -452,18 +455,16 @@ function appendStatus(page, value, questionCount) {
         statusElem.style.paddingBottom = '5px';
     }
     page.appendChild(statusElem);
-    if (questionCount === questions.length) {
+    if (questionCount === questions.length) { // this applies for the last question
         var removeStatusElem = setTimeout(function () {
             statusElem.style.visibility = 'hidden';
         }, 3000); // remove the status for the last question from the page after 3 seconds
     }
 }
 // source for how to set style properties in JavaScript: https://www.w3schools.com/jsref/prop_html_style.asp
-// source for removeChild(): https://www.w3schools.com/jsref/met_node_removechild.asp
 
 function displayNextQuestion(clickedBtn) {
-    if (questionCounter < questions.length) {
-        // console.log(questionCounter);
+    if (questionCounter < questions.length) { // if the user has not reached the last question
         currentQuestion.textContent = questions[questionCounter].question;
         contentA.textContent = questions[questionCounter].a;
         contentB.textContent = questions[questionCounter].b;
@@ -473,7 +474,7 @@ function displayNextQuestion(clickedBtn) {
         if (clickedBtn !== questions[questionCounter-1].correct) { // if the user answers the question incorrectly
             timeRemaining -= 5;
             appendStatus(quizContainer, false, questionCounter);
-        } else {
+        } else { // if the user answers the question correctly
             appendStatus(quizContainer, true, questionCounter);
         }
     }
@@ -499,14 +500,14 @@ var choiceD = document.getElementById('choice-d');
 // these are the buttons that correspond to the choices
 
 choiceA.addEventListener("click", function() {
-    displayNextQuestion("a"); // clickedBtn = a
+    displayNextQuestion("a"); // clickedBtn = "a"
 });
 choiceB.addEventListener("click", function() {
-    displayNextQuestion("b"); // clickedBtn = b
+    displayNextQuestion("b"); // clickedBtn = "b"
 });
 choiceC.addEventListener("click", function() {
-    displayNextQuestion("c"); // clickedBtn = c
+    displayNextQuestion("c"); // clickedBtn = "c"
 });
 choiceD.addEventListener("click", function() {
-    displayNextQuestion("d"); // clickedBtn = d
+    displayNextQuestion("d"); // clickedBtn = "d"
 });
