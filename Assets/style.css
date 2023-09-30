@@ -10,7 +10,7 @@
 body {
     font-family: var(--font_family);
     max-width: var(--window_width);
-    margin: 50px 0 0 50px; /* top right bottom left */
+    margin: 50px 8px 8px 50px; /* top right bottom left */
     background-color: var(--bg_color);
     border: var(--border);
     border-radius: var(--border_radius);
