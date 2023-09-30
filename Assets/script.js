@@ -285,7 +285,6 @@ function loadHighScores(arr) {
             // source for how to find a key that corresponds to a value in localStorage: https://stackoverflow.com/questions/12949723/html5-localstorage-getting-key-from-value
             // source for the includes() method: https://www.w3schools.com/jsref/jsref_includes_array.asp
             // source for the substring() method: https://www.w3schools.com/jsref/jsref_substring.asp
-            
         }
     }
 }
