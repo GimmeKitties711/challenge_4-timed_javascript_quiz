@@ -418,7 +418,8 @@ function appendStatus(page, value, questionCount) {
         statusElem.style.color = 'red';
     }
     if (questionCount < questions.length) {
-        statusElem.style.margin = '10px 20px';
+        statusElem.style.margin = '10px 20px 0 20px';
+        statusElem.style.paddingBottom = '5px';
     }
     page.appendChild(statusElem);
     if (questionCount === questions.length) {

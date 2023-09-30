@@ -1,20 +1,36 @@
 :root {
-    --window-width: 600px;
+    --window_width: 600px;
+    --font_family: system-ui, 'Lucida Sans', Arial, 'Trebuchet MS', sans-serif;
+    --bg_color: beige;
+    --border: 3px solid deepskyblue;
+    --border_radius: 5px;
+    --hover_color: deepskyblue;
 }
 
 body {
+    font-family: var(--font_family);
+    max-width: var(--window_width);
     margin: 50px 0 0 50px; /* top right bottom left */
+    background-color: var(--bg_color);
+    border: var(--border);
+    border-radius: var(--border_radius);
+}
+
+.header, #home-container, #quiz-container, #quiz-completed-container, #high-scores-container {
+    background-color: sandybrown;
 }
 
 .header {
-    max-width: var(--window-width);
+    max-width: var(--window_width);
 }
 
+/*
 @media only screen and (max-width: 360px) {
     .header {
         height: 150px;
     }
 }
+*/
 
 .header h4 {
     display: inline-block;
@@ -32,21 +48,33 @@ body {
 }
 
 #high-scores-shorter:hover, #high-scores-longer:hover {
-    color: #79ab49;
+    background-color: var(--bg_color);
+    border: var(--border);
+    border-radius: var(--border_radius);
+    padding: 0 20px 5px 20px;
     cursor: default;
 }
 
 #home-container {
-    max-width: var(--window-width);
+    max-width: var(--window_width);
+    padding-bottom: 20px;
 }
 
 #home-container h2 {
     display: flex;
     justify-content: center;
+    margin-top: 0;
+}
+
+@media only screen and (max-width: 350px) {
+    #home-container h2 {
+        padding-left: 20px;
+    }
 }
 
 #quiz-instructions {
-    padding-left: 20px;
+    /*padding-left: 20px;*/
+    padding: 0 20px 0 20px;
 }
 
 #start-quiz-btn {
@@ -62,15 +90,24 @@ body {
 #quiz-container {
     display: none;
     max-width: 600px;
-    max-height: 800px;
+    /*max-height: 800px;*/
+    padding-bottom: 5px;
 }
 
 #current-question {
     margin: 0 0 20px 20px;
 }
 
+button {
+    font-family: var(--font_family);
+    background-color: var(--bg_color);
+    border: var(--border);
+    border-radius: var(--border_radius);
+}
+
 button:hover {
-    background-color: #79ab49;
+    background-color: var(--hover_color);
+    border-color: black;
 }
 
 #quiz-container button {
@@ -84,7 +121,11 @@ button:hover {
 
 #quiz-completed-container {
     display: none;
-    margin-left: 20px;
+    padding: 0 0 10px 20px;
+}
+
+#quiz-completed {
+    margin-top: 0;
 }
 
 #submit-score {
@@ -93,5 +134,9 @@ button:hover {
 
 #high-scores-container {
     display: none;
-    margin-left: 20px;
+    padding-left: 20px;
+}
+
+#high-scores-container h2 {
+    margin-top: 0;
 }
