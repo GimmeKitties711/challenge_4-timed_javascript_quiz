@@ -8,12 +8,12 @@ var questions = [
         correct: "c"
     },
     {
-        question: "[2/10] Which line of code adds the attribute 'display: none' to a div?",
-        a: "document.querySelector('div').addAttribute('display', 'none')",
-        b: "document.querySelector('div').setAttribute('display: none')",
-        c: "document.querySelector('div').addAttribute('display: none')",
-        d: "document.querySelector('div').setAttribute('display', 'none')",
-        correct: "d"
+        question: "[2/10] Which of the following localStorage methods is NOT written correctly?",
+        a: "localStorage.getItem(key)",
+        b: "localStorage.getItem(value)",
+        c: "localStorage.setItem(key, value)",
+        d: "localStorage.removeItem(key)",
+        correct: "b"
     },
     {
         question: "[3/10] Which of the following methods joins all elements of an array into a string?",
@@ -151,7 +151,6 @@ startQuizBtn.addEventListener("click", function() {
     changePageToQuiz();
     quizStarted = true;
 });
-// source for how to use addEventListener(): https://www.w3schools.com/jsref/met_element_addeventlistener.asp
 
 function changePageToHighScores() {
     if (quizContainer.style.display === "block") {
@@ -172,11 +171,15 @@ var noButton = document.getElementById('no-button');
 noButton.addEventListener("click", changePageToHighScores);
 
 function hideHeader() {
-    headerElem.style.visibility = "hidden";
+    headerHighScoresShorter.style.visibility = "hidden";
+    headerHighScoresLonger.style.visibility = "hidden";
+    timeLeft.style.visibility = "hidden";
 }
 
 function revealHeader() {
-    headerElem.style.visibility = "visible";
+    headerHighScoresShorter.style.visibility = "visible";
+    headerHighScoresLonger.style.visibility = "visible";
+    timeLeft.style.visibility = "visible";
 }
 
 var saveQuestion = document.getElementById('save-question');
@@ -228,7 +231,7 @@ var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, s
 function checkKeyFormat(key) {
     var keyRegex = /^[A-Za-z]{2}\s-\s[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\s[A-Za-z]{3}-\d{4}$/;
     // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO%20%20%5Borg.example.Class%5D%3A%20This%20is%20a%20%23simple%20%23logline%20containing%20a%20%27value%27.&flags=i
-    // it is meant to fit the format of strings such as AB - Thu Sep 28 2023 14:33:55 GMT-0700
+    // it is meant to fit the format of strings such as 'AB - Thu Sep 28 2023 14:33:55 GMT-0700'
     var match = key.match(keyRegex);
     if (!match) {
         return false;
@@ -349,6 +352,7 @@ headerHighScoresLonger.addEventListener("click", function() {
 
 function changePageToHome() {
     hideSubmissionForm();
+    quizCompletedContainer.lastChild.remove();
     homeContainer.style.display = "block";
     quizContainer.style.display = "none"
     quizCompletedContainer.style.display = "none";
@@ -411,11 +415,13 @@ function appendStatus(page, value, questionCount) {
     if (value) {
         statusString = questionCount + '.' + ' Correct';
         statusElem.innerText = statusString;
-        statusElem.style.color = 'green';
+        statusElem.style.color = 'darkgreen';
+        statusElem.style.fontWeight = '700';
     } else {
         statusString = questionCount + '.' + ' Incorrect. You have lost 5 seconds.';
         statusElem.innerText = statusString;
-        statusElem.style.color = 'red';
+        statusElem.style.color = 'darkred';
+        statusElem.style.fontWeight = '700';
     }
     if (questionCount < questions.length) {
         statusElem.style.margin = '10px 20px 0 20px';
@@ -424,7 +430,7 @@ function appendStatus(page, value, questionCount) {
     page.appendChild(statusElem);
     if (questionCount === questions.length) {
         var removeStatusElem = setTimeout(function () {
-            page.removeChild(statusElem);
+            statusElem.style.visibility = 'hidden';
         }, 3000);
     }
 }

@@ -1,7 +1,7 @@
 :root {
     --window_width: 600px;
     --font_family: system-ui, 'Lucida Sans', Arial, 'Trebuchet MS', sans-serif;
-    --bg_color: beige;
+    --bg_color: wheat;
     --border: 3px solid deepskyblue;
     --border_radius: 5px;
     --hover_color: deepskyblue;
@@ -23,14 +23,6 @@ body {
 .header {
     max-width: var(--window_width);
 }
-
-/*
-@media only screen and (max-width: 360px) {
-    .header {
-        height: 150px;
-    }
-}
-*/
 
 .header h4 {
     display: inline-block;
@@ -73,7 +65,6 @@ body {
 }
 
 #quiz-instructions {
-    /*padding-left: 20px;*/
     padding: 0 20px 0 20px;
 }
 
@@ -90,8 +81,40 @@ body {
 #quiz-container {
     display: none;
     max-width: 600px;
-    /*max-height: 800px;*/
-    padding-bottom: 5px;
+    padding: 0 20px 5px 0;
+}
+
+@media only screen and (max-width: 320px) {
+    #high-scores-shorter, #high-scores-longer, #time-left {
+        font-size: 0.6rem;
+    }
+    #high-scores-shorter:hover, #high-scores-longer:hover {
+        padding-bottom: 2px;
+    }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 350px) {
+    #high-scores-shorter, #high-scores-longer, #time-left {
+        font-size: 0.7rem;
+    }
+    #high-scores-shorter:hover, #high-scores-longer:hover {
+        padding-bottom: 3px;
+    }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 400px) {
+    #high-scores-shorter, #high-scores-longer, #time-left {
+        font-size: 0.8rem;
+    }
+    #high-scores-shorter:hover, #high-scores-longer:hover {
+        padding-bottom: 4px;
+    }
+}
+
+@media only screen and (min-width: 400px) and (max-width: 450px) {
+    #high-scores-shorter, #high-scores-longer, #time-left {
+        font-size: 0.9rem;
+    }
 }
 
 #current-question {
@@ -121,7 +144,7 @@ button:hover {
 
 #quiz-completed-container {
     display: none;
-    padding: 0 0 10px 20px;
+    padding: 0 20px 10px 20px;
 }
 
 #quiz-completed {
@@ -132,11 +155,33 @@ button:hover {
     display: none;
 }
 
+#initials {
+    font-family: var(--font_family);
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+#high-scores-btn {
+    font-family: var(--font_family);
+    background-color: var(--bg_color);
+    border: var(--border);
+    border-radius: var(--border_radius);
+}
+
+#high-scores-btn:hover {
+    background-color: var(--hover_color);
+    border-color: black;
+}
+
 #high-scores-container {
     display: none;
-    padding-left: 20px;
+    padding: 0 10px 0 20px;
 }
 
 #high-scores-container h2 {
     margin-top: 0;
+}
+
+#home-or-quiz-page-btn, #clear-high-scores {
+    margin-bottom: 10px;
 }
