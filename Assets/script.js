@@ -247,7 +247,7 @@ var scoreContainers = [score1, score2, score3, score4, score5, score6, score7, s
 
 function checkKeyFormat(key) {
     var keyRegex = /^[A-Za-z]{2}\s-\s[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\s[A-Za-z]{3}-\d{4}$/;
-    // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO%20%20%5Borg.example.Class%5D%3A%20This%20is%20a%20%23simple%20%23logline%20containing%20a%20%27value%27.&flags=i
+    // this regex was generated using this website: https://regex-generator.olafneumann.org/?sampleText=2020-03-12T13%3A34%3A56.123Z%20INFO&flags=i
     // it is meant to fit the format of strings such as 'AB - Thu Sep 28 2023 14:33:55 GMT-0700'
     var match = key.match(keyRegex);
     if (!match) { // if the localStorage key does not match keyRegex
