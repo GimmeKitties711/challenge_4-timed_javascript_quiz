@@ -172,7 +172,10 @@ function changePageToHighScores() {
 }
 
 var noButton = document.getElementById('no-button');
-noButton.addEventListener("click", changePageToHighScores);
+noButton.addEventListener("click", function() {
+    changePageToHighScores();
+    hideHeader(quizStarted);
+});
 // if the user decides not to submit their latest score, take them straight to the high scores page
 
 function hideHeader(inProgress) {
@@ -225,7 +228,7 @@ function validateForm() {
     return true;
 }
 // source for validating form input: https://www.w3schools.com/js/js_validation.asp
-// source for how to use match() to check if a string matches a regex: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+// source for using match() to check if a string matches a regex: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
 
 var score1 = document.getElementById('score-1');
 var score2 = document.getElementById('score-2');

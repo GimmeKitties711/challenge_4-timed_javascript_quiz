@@ -185,3 +185,8 @@ button:hover {
 #home-or-quiz-page-btn, #clear-high-scores {
     margin-bottom: 10px;
 }
+
+span {
+    font-family: 'Consolas', 'monospace', 'serif', 'sans-serif';
+    color: mediumvioletred;
+}
