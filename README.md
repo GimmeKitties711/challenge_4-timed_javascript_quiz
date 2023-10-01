@@ -1,115 +1,37 @@
-# 04 Web APIs: Code Quiz
+# Challenge 4
 
-## Your Task
+![GitHub license](https://img.shields.io/badge/License-GPL_v2-blue.svg)
 
-At some point in your journey to become a full-stack web developer, you’ll likely be asked to complete a coding assessment&mdash;perhaps as part of an interview process. A typical coding assessment includes both multiple-choice questions and interactive coding challenges. 
+## Description
+When you are learning a new skill, it is important to test your knowledge with questions about fundamental concepts. Doing so will help solidify the ideas in your mind and make you more familiar with the topic as a whole. This quiz tests your JavaScript knowledge by asking you 10 questions about methods and concepts you are likely to see and use. After you completed the quiz, you can choose to save your score, which is higher the faster you complete the quiz and the fewer mistakes you make. This project taught me how to use setInterval() and setTimeout(), display only a certain part of the page, and iterate through localStorage to find certain data.
 
-To help familiarize you with these tests and allow you to use the skills covered in this module, this Challenge invites you to build a timed coding quiz with multiple-choice questions. This app will run in the browser and will feature dynamically updated HTML and CSS powered by JavaScript code that you write. It will have a clean, polished, and responsive user interface. 
+## Table of Contents
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Credits](#credits)
+- [Contributing](#contributing)
+- [Tests](#tests)
+- [License](#license)
+- [Questions](#questions)
 
-This week’s coursework will equip you with all the skills you need to succeed in this assignment.
+## Installation
+No installation is required for this project.
 
-## User Story
+## Usage
+Starting from the home page, you are provided with instructions on how to complete the quiz. From there, you can either view high scores, as shown in the header, or start the quiz: (insert picture of home page here) Once you start the quiz, you can view the high scores while the quiz is in progress and it pauses the timer: (insert picture of view high scores pauses quiz hover button here) (insert picture of high scores from quiz here) If you answer a question correctly, the result will show as correct as show here (insert picture of correct status here) If you answer a question incorrectly, the status will show as 'Incorrect. You have lost 5 seconds.' (insert picture of incorrect status here) Once you have completed the quiz, you will see the results screen (insert picture of quiz completed container here). from there, you can choose whether or not you want to save your latest score. If you choose not to save your score, you will be taken to the high scores page, from which you can go back to the home page. If you choose to save your score, however, you will be presented with a form where you can enter your initials (insert form picture here) which will then take you to the high scores page (insert picture of high scores page here) **Important:** If you choose to save your high score but it is not in the top 10 saved scores, it will not show on the high scores page. **Important:** if you say yes when asked if you want to save your score and then change your mind, you can get back to the home page by clicking 'View high scores' in the header.
 
-```
-AS A coding boot camp student
-I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
-SO THAT I can gauge my progress compared to my peers
-```
+## Credits
+Received assistance from AskBCS assistants Daniel and Mia, and in the *#02-ask-the-class* Slack channel from instructor Robbert Wijtman and office hours. The following web resources helped me write the code for this project: (insert sources here)
 
-## Acceptance Criteria
+## Contributing
+This project does not yet have the functionality to delete a specific high score and have the new top 10 scores reloaded with every deletion. If someone could help me implement this feature, that would be greatly appreciated.
 
-```
-GIVEN I am taking a code quiz
-WHEN I click the start button
-THEN a timer starts and I am presented with a question
-WHEN I answer a question
-THEN I am presented with another question
-WHEN I answer a question incorrectly
-THEN time is subtracted from the clock
-WHEN all questions are answered or the timer reaches 0
-THEN the game is over
-WHEN the game is over
-THEN I can save my initials and my score
-```
+## Tests
+No tests have been written for this application.
 
-## Acceptance Criteria Simplified
+## License
+This project was created using the GNU General Public License v2.0. More information about the license can be found [here](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
 
-This project is about creating a quiz game. You will need to do the following:
-
-* Have a list of questions for the player. Each question should have at least 4 answers with one being correct. Have at least 2 questions, though more is encouraged!
-* When the user clicks the start button, show them the first question.
-* As the user answers questions, move them to the next question until all questions are out.
-* When no more questions are left, Show the game over screen.
-* Add in a timer. The timer should start as soon as the start button is clicked, and tick down each second. It should show in the top right corner of the page.
-* When the user choses an incorrect answer, take some time off the timer. How much is up to you.
-* When the timer reaches 0, show the game over screen.
-* Show the last timer value as the player's score on the game over screen.
-* Give the player the ability to enter their initials, then save them to localstorage along with the score from the game over screen. You should save the data in a format that allows multiple high scores to be saved.
-* Once the player saves their highscore, show the highscores as a list on the page
-* Add a link to the top left corner. When clicked, go directly to the highscore list.
-
-## Mock-Up
-
-The following animation demonstrates the application functionality:
-
-![A user clicks through an interactive coding quiz, then enters initials to save the high score before resetting and starting over.](./Assets/04-web-apis-homework-demo.gif)
-
-## Grading Requirements
-
-> **Note**: If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count towards your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
-
-This Challenge is graded based on the following criteria: 
-
-### Technical Acceptance Criteria: 40%
-
-* Satisfies all of the preceding acceptance criteria.
-
-### Deployment: 32%
-
-* Application deployed at live URL.
-
-* Application loads with no errors.
-
-* Application GitHub URL submitted.
-
-* GitHub repository contains application code.
-
-### Application Quality: 15%
-
-* Application user experience is intuitive and easy to navigate.
-
-* Application user interface style is clean and polished.
-
-* Application resembles the mock-up functionality provided in the Challenge instructions.
-
-### Repository Quality: 13%
-
-* Repository has a unique name.
-
-* Repository follows best practices for file structure and naming conventions.
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages.
-
-* Repository contains quality readme file with description, screenshot, and link to deployed application.
-
-## Review
-
-You are required to submit BOTH of the following for review:
-
-* The URL of the functional, deployed application.
-
-* The URL of the GitHub repository, with a unique name and a readme describing the project.
-
----
-
-© 2023 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+## Questions
+If you have any questions for me, you can [follow me on GitHub](https://github.com/GimmeKitties711) or email me at eric20wang.wang@gmail.com.
