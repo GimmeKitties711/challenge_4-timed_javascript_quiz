@@ -219,10 +219,11 @@ function hideSubmissionForm() {
 
 function validateForm() {
     var initialsForm = document.forms["submitInitials"]["initials"].value;
+    var initialsFormCAPS = initialsForm.toUpperCase(); // capitalize the user's input
     var initialsRegex = /^[A-Z]{2}$/; // two capital letters
-    var match = initialsForm.match(initialsRegex);
-    if (!match) { // if the user enters anything except two capital letters
-      alert("Please enter valid initials, e.g. 'AB'");
+    var match = initialsFormCAPS.match(initialsRegex);
+    if (!match) { // if the user enters anything except two letters (case insensitive)
+      alert("Please enter valid initials, e.g. 'AB' (not case sensitive)");
       return false;
     }
     return true;
@@ -319,7 +320,7 @@ highScoresBtn.addEventListener("click", function() {
         var currentDateAndTimeString = currentDateAndTime.toString();
         // convert the date and time into a string so it can be used in the localStorage key
         var currentDateAndTimeStringTrimmed = currentDateAndTimeString.substring(0, 33); // cut out the part that says '(Pacific Daylight Time)' because time zone name can vary and have inconsistent character lengths
-        var localStorageKeyString = initials + ' - ' + currentDateAndTimeStringTrimmed;
+        var localStorageKeyString = initials.toUpperCase() + ' - ' + currentDateAndTimeStringTrimmed;
         // example: AB - Wed Sep 27 2023 17:14:28 GMT-0700
         localStorage.setItem(localStorageKeyString, timeRemaining); // the time left at the end of the quiz is used as the score, which is stored as the localStorage value
         changePageToHighScores(); // change the page component to highScoresContainer
@@ -383,6 +384,8 @@ function changePageToHome() {
     timeLeft.textContent = timeLeftString;
     timeLeft.style.color = "black";
     // reset timeRemaining and change the color of 'Time: 75' to black in case it was red at the end of the quiz
+    quizCompleted.textContent = "Quiz completed.";
+    // change the message back to 'Quiz completed.' in case it was 'Quiz partially completed.' at the end of the quiz
 }
 
 homeOrQuizPageBtn.addEventListener("click", function() {
@@ -426,6 +429,7 @@ function changePageToQuizCompleted() {
     headerHighScoresLonger.style.display = "none";
     // change header to 'View high scores'
     if (questionCounter <= questions.length) { // if the user did not answer all of the questions
+        console.log('questionCounter: ' + questionCounter);
         quizCompleted.textContent = "Quiz partially completed.";
     }
     if (timeRemaining < 0) { // if timeRemaining < 5 and the user's last answer is incorrect (-5 sec)
@@ -489,7 +493,9 @@ function displayNextQuestion(clickedBtn) {
         }
     }
     questionCounter++;
+    console.log('questionCounter: ' + questionCounter);
     if (questionCounter > questions.length) { // if the user answers the last question
+        console.log('questionCounter: ' + questionCounter);
         clearInterval(quizTimer);
         changePageToQuizCompleted();
     }

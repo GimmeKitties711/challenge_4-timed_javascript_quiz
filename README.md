@@ -46,13 +46,13 @@ Once you have completed the quiz, or the timer reaches 0, you will see the resul
 From this page, you can decide if you want to save your latest score.
 
 If you select `No`, you will be taken to the high scores page, from which you can go back to the home page.
-If you select `Yes`, you will be presented with a form where you can enter your initials:
+If you select `Yes`, you will be presented with a form where you can enter your initials (not case sensitive):
 
 ![Submit initials](Assets/Images/quiz_completed_page_submit_button_highlighted.png)
 
 However, if you select `Yes` and then change your mind, you can go back to the home page by clicking `View high scores` in the header.
 
-**Important:** You are required to enter two capital letters for your initials to be accepted. If you do not enter your initials correctly, the page will alert you:
+**Important:** You are required to enter two letters for your initials to be accepted. If you do not enter your initials correctly, the page will alert you:
 
 ![Improper submission alert](Assets/Images/quiz_completed_page_improper_input_alert.png)
 
